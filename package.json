@@ -1,0 +1,56 @@
+{
+    "name": "media.lightside.unitext",
+    "version": "1.0.0",
+    "displayName": "UniText",
+    "description": "Professional Unicode text rendering for Unity with full RTL support, HarfBuzz shaping, and extensible markup system.",
+    "unity": "2021.3",
+    "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.ui": "1.0.0"
+    },
+    "author": {
+        "name": "LightSide",
+        "url": "https://unity.lightside.media"
+    },
+    "keywords": [
+        "text",
+        "unicode",
+        "rtl",
+        "arabic",
+        "hebrew",
+        "bidi",
+        "harfbuzz",
+        "shaping",
+        "localization",
+        "ui"
+    ],
+    "license": "SEE LICENSE IN LICENSE.md",
+    "documentationUrl": "https://unity.lightside.media/unitext/docs/",
+    "samples": [
+        {
+            "displayName": "Basic Usage",
+            "description": "Core features: text formatting, RTL languages, and runtime API",
+            "path": "Samples~/BasicUsage"
+        },
+        {
+            "displayName": "Emoji",
+            "description": "Emoji rendering: flags, ZWJ sequences, skin tones",
+            "path": "Samples~/Emoji"
+        },
+        {
+            "displayName": "Layout",
+            "description": "Alignment, word wrap, and AutoSize features",
+            "path": "Samples~/Layout"
+        },
+        {
+            "displayName": "Modifiers",
+            "description": "Markup system: styling, colors, links, lists",
+            "path": "Samples~/Modifiers"
+        },
+        {
+            "displayName": "Font Examples",
+            "description": "Font variety showcase: decorative fonts, icon fonts (Font Awesome), monospace, multilingual support",
+            "path": "Samples~/FontExamples"
+        }
+    ]
+}

@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c462a215d824769a04b6e8060809d3b, type: 3}
+  m_Name: ModRegisterConfig
+  m_EditorClassIdentifier: LightSide.UniText::ModRegisterConfig
+  modRegisters:
+    items:
+    - modifier:
+        rid: 2935973566340137106
+      rule:
+        rid: 2935973566340137107
+    - modifier:
+        rid: 2935973566340137110
+      rule:
+        rid: 2935973566340137111
+    - modifier:
+        rid: 2935973732210966574
+      rule:
+        rid: 2935973732210966575
+    - modifier:
+        rid: 266424891755987266
+      rule:
+        rid: 266424891755987267
+  references:
+    version: 2
+    RefIds:
+    - rid: 266424891755987266
+      type: {class: GradientModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 266424891755987267
+      type: {class: GradientParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137106
+      type: {class: ColorModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137107
+      type: {class: ColorParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137110
+      type: {class: LineHeightModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137111
+      type: {class: LineHeightParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973732210966574
+      type: {class: UppercaseModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973732210966575
+      type: {class: UppercaseParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 

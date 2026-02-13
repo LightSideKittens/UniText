@@ -1,0 +1,288 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4600157662377765230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9001780787298192370}
+  - component: {fileID: 4274180269544662098}
+  - component: {fileID: 6429926910226261883}
+  m_Layer: 5
+  m_Name: FullTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &9001780787298192370
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4600157662377765230}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -833, y: 363}
+  m_SizeDelta: {x: 1068.3, y: 2097.4}
+  m_Pivot: {x: 0.79593015, y: 0.66504484}
+--- !u!222 &4274180269544662098
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4600157662377765230}
+  m_CullTransparentMesh: 1
+--- !u!114 &6429926910226261883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4600157662377765230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa34cb0e58d624bb3a264b28600785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LSCore.UIModule::UniText
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 1, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  text: "123456. \u0644\u0644\u0644\u0644\u0644shaping  faksjd  fhak<obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/><obj=\"log\"/>lsjdfhaklsjdhafalskjdh
+    aksldjha ksl jfha skldaskjhaskdjh\n  1. \u0644\u0644\u0644\u0644\u0644shaping\n-
+    \u0644\u0644\u0644\u0644\u0644shaping  faksjd fhak lsjdfhaklsjdha falskjdh aksldjha
+    ksl jfha skldaskjhaskdjh\n  - \u0644\u0644\u0644\u0644\u0644shaping\n      -
+    \u0644\u0644\u0644\u0644\u0644shaping\n- sdfsdf\n  - sdfjslkdfs\n    - dfskldfj\n12345.
+    <b>Test numbered</b>\n  1. <u><s>Test nested numbered</s></u>\n\n[Google Markdown
+    link](https://google.com)\n\nhttps://google.com\n\n\u0645\u0631\u062D\u0628\u0627
+    \u0643\u062A\u0627\u0628 <link=\"https://google.com\">\u0634\u0645\u0633 Google
+    Tag</link> Link\n\n<color=#98f>\u0627\u0644\u0639\u0631\u0628\u064A\u0629: \u0645\u0631\u062D\u0628\u0627\u064B
+    \u0628\u0627\u0644\u0639\u0627\u0644\u0645! <obj=\"logo\"/> \u0647\u0630\u0627
+    \u0646\u064E\u0635\u0651\u064C \u0644\u0627\u062E\u062A\u0628\u0627\u0631 \u0627\u0644\u0627\u062A\u062C\u0627\u0647\u061B
+    \u0639\u0631\u0628\u0649\u060C \u0639\u0631\u0628\u064A\u060C \u0639\u0631\u0628\u064A\u061F\n\u0623\u0631\u0642\u0627\u0645
+    \u0639\u0631\u0628\u064A\u0629-\u0647\u0646\u062F\u064A\u0629: \u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669\u0660,
+    Arabic digits: 1234567890.\n\u0639\u0644\u0627\u0645\u0627\u062A \u0627\u0644\u062A\u0631\u0642\u064A\u0645:
+    \u060C \u061B \u061F ! : \u060C \u2026 \u2014 (\u0634\u0631\u0637\u0629 \u0637\u0648\u064A\u0644\u0629)\u060C
+    \"\u0627\u0642\u062A\u0628\u0627\u0633\"\u060C \xAB\u0627\u0642\u062A\u0628\u0627\u0633\xBB.\n\n\u0644\u0627\u0645-\u0623\u0644\u0641:
+    \u0644\u0627 \u0644\u064E\u0627 \u0644\u0651\u064E\u0627 \u0644\u064E\u200D\u0627
+    (LAM + FATHA + ZWJ + ALEF).\n\u0633\u0644\u0633\u0644\u0629 \u0645\u0634\u0643\u0648\u0644\u0629:
+    \u0627\u064E\u0644\u0644\u0651\u0670\u0647\u064F \u0631\u064E\u0628\u0651\u064F
+    \u0627\u0644\u0652\u0639\u064E\u0627\u0644\u064E\u0645\u0650\u064A\u0646\u064E\u060C
+    \u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u0651\u0670\u0647\u0650
+    \u0627\u0644\u0631\u0651\u064E\u062D\u0652\u0645\u0670\u0646\u0650 \u0627\u0644\u0631\u0651\u064E\u062D\u0650\u064A\u0645\u0650.\n\n\u0641\u0627\u0631\u0633\u06CC:
+    \u0633\u0644\u0627\u0645 \u062F\u0646\u06CC\u0627! \u062D\u0631\u0648\u0641 \u0627\u0636\u0627\u0641\u06CC:
+    \u067E \u0686 \u0698 \u06AF \u06CC.\n\u0641\u0627\u0635\u0644\u0647\u0654 \u0645\u062C\u0627\u0632\u06CC
+    (<cspace=122>ZWNJ</cspace>): \u0645\u06CC\u200C\u0631\u0648\u0645\u060C \u062E\u0627\u0646\u0647\u200C\u0647\u0627\u060C
+    \u06A9\u062A\u0627\u0628\u200C\u0647\u0627\u060C \u0646\u0645\u06CC\u200C\u062E\u0648\u0627\u0647\u0645.\n\n\u0627\u064F\u0631\u062F\u0648:
+    \u06CC\u06C1 \u0627\u06CC\u06A9 \u062C\u0627\u0645\u0639 \u0679\u06CC\u0633\u0679
+    \u0679\u06CC\u06A9\u0633\u0679 \u06C1\u06D2\u061B \u062D\u0631\u0648\u0641: \u0679\u060C
+    \u0688\u060C \u0691\u060C \u06BA\u060C \u06C1\u060C \u06BE\u060C \u06D2\u060C
+    \u06BA\u060C \u06AF\u060C \u06A9\u060C \u06CC.\n\u0645\u062E\u0644\u0648\u0637
+    \u062C\u0645\u0644\u06C1: \u0627\u0631\u062F\u0648 (Urdu) + English + \u0627\u0639\u062F\u0627\u062F
+    \u06F1\u06F2\u06F3\u06F4.\n\n\u05E2\u05D1\u05E8\u05D9\u05EA: \u05E9\u05DC\u05D5\u05DD
+    \u05E2\u05D5\u05DC\u05DD, \u05D8\u05E7\u05E1\u05D8 \u05D1\u05D3\u05D9\u05E7\u05D4,
+    \u05DE\u05E1\u05E4\u05E8\u05D9\u05DD 1234 \u05D5-\u0665\u0666\u0667\u0668.\nMixed
+    Hebrew/English: \u05E9\u05DC\u05D5\u05DD (shalom) world 2025-12-01, test-\u05DE\u05E1\u05E4\u05E8.\n\nNested
+    brackets: (AR: \u0645\u0631\u062D\u0628\u0627 [\u0646\u0635 {\u062A\u062C\u0631\u064A\u0628\u064A}
+    \u0645\u0639 \u0623\u0642\u0648\u0627\u0633]!) and (EN: (nested [brackets] {here})).\nQuotes:
+    \"plain quotes\", \u2018single\u2019, \u201Cdouble smart\u201D, \xABguillemets\xBB,
+    \u201Elow-high\u201C.\n\nRichText: <i><b>\u063A\u0627\u0645\u0642 \u0639\u0631\u0628\u064A
+    \u0645\u0631\u062D\u0628\u0627</b></i>, <i>\u05E9\u05DC\u05D5\u05DD \u05DE\u05D5\u05D3\u05D2\u05E9</i>,
+    <color=#FF0000>red English text</color>, <size=150%>\u0646\u0635 \u0645\u0643\u0628\u0631</size>,
+    <u><color=#695>test</color> \u062E\u0637 \u0633\u0641\u0644\u064A</u>.\n\nZWJ
+    forms (for shaping): \u200D\u0628 (forced final), \u0628\u200D (forced initial),
+    \u200D\u0628\u200D (forced medial).\nMix with diacritics + ZWJ: \u200D\u0628\u064E\u200D\u060C
+    \u200D\u0646\u0651\u064E\u200D.\nZWNJ breaking join: \u0628\u0627\u200C\u0628\u060C
+    \u0644\u0627\u200C\u0627\u060C \u0645\u06CC\u200C\u0631\u0648\u062F.\n<line-height=70>\nBidi
+    controls (LRE/RLE/PDF, LRM/RLM):\nEnglish before  \u0645\u0631\u062D\u0628\u0627
+    \u0628\u0627\u0644\u0639\u0627\u0644\u0645  after [RLE ... PDF].\nLRM/LRM: EN\u200E-\u200Etag,
+    AR\u200F-\u200F\u0639\u0644\u0627\u0645\u0629.</line-height>\n<gradient=rainbow,L>\nMixed
+    run: \u0645\u0631\u062D\u0628\u0627 (hello) 123 in [EN], \u062B\u0645 \u0646\u0635
+    \u0639\u0631\u0628\u064A\u060C then Hebrew \u05E9\u05DC\u05D5\u05DD, \u05D5\u05D0\u05D6
+    again \u0639\u0631\u0628\u0649.\nRight-to-left with inner English: \u0647\u0630\u0627
+    \"test\" \u062F\u0627\u062E\u0644 \u062C\u0645\u0644\u0629 \u0639\u0631\u0628\u064A\u0629
+    (with brackets).\u061F\n\nBrackets around RTL: (\u0645\u0631\u062D\u0628\u0627)\u060C
+    [\u0633\u0644\u0627\u0645]\u060C {\u0634\u06A9\u0631\u06CC\u06C1} and around
+    mixed [hello \u0645\u0631\u062D\u0628\u0627 123].</gradient></color>\n\n<b>Emojis:
+    \U0001F600 \U0001F603 \U0001F601 \U0001F602 \U0001F914 \U0001F44D.</b>\n<i>RTL
+    with <upper>emojis:</upper> \u0645\u0631\u062D\u0628\u0627 \U0001F600 \u0628\u0627\u0644\u0639\u0627\u0644\u0645\u060C
+    \u0631\u0642\u0645 \u0661\u0662\u0663\u060C \u0646\u0635 \U0001F603 \u0645\u062E\u062A\u0644\u0637
+    \U0001F44D.</i>\n<gradient=rainbow>Family ZWJ emoji: \U0001F468\u200D\U0001F469\u200D\U0001F467\u200D\U0001F466,
+    flags: \U0001F1EE\U0001F1F7 (IL), \U0001F1EA\U0001F1F8 (ES), \U0001F1FA\U0001F1F8
+    (US).</gradient>\n\nBig mixed line: \u0644\u0627 + \u0644\u064E\u0627 + \u0644\u0651\u064E\u0627
+    + \u0641\u0627\u0631\u0633\u06CC \u067E\u0686\u0698\u06AF + \u0627\u064F\u0631\u062F\u0648
+    \u0679\u060C\u0688\u060C\u0691 + \u05E2\u05D1\u05E8\u05D9\u05EA \u05E9\u05DC\u05D5\u05DD
+    + English TEXT 1234 ++ emoji \U0001F600 + brackets (\u0639\u0631\u0628\u064A
+    [EN {\u05E2\u05D1\u05E8\u05D9\u05EA} 42]) + ZWNJ \u0645\u06CC\u200C\u0631\u0648\u0645
+    + ZWJ \u200D\u0628\u200D + bidi controls  \u0639\u0631\u0628\u064A \u0645\u0639 
+    EN  \u062F\u0627\u062E\u0644  done."
+  fonts: {fileID: 11400000, guid: 72f6e3edfbc82804791ebe8e4814fa46, type: 2}
+  appearance: {fileID: 11400000, guid: 36ee3940d360ced43a59dd530844bf3d, type: 2}
+  fontSize: 28
+  baseDirection: 2
+  wordWrap: 1
+  horizontalAlignment: 0
+  verticalAlignment: 0
+  autoSize: 0
+  minFontSize: 10
+  maxFontSize: 72
+  modRegisters:
+    items:
+    - modifier:
+        rid: 2031797866453532880
+      rule:
+        rid: 2031797866453532881
+    - modifier:
+        rid: 2031797866453532882
+      rule:
+        rid: 2031797866453532883
+    - modifier:
+        rid: 2031797866453532884
+      rule:
+        rid: 2031797866453532885
+    - modifier:
+        rid: 2031797866453532886
+      rule:
+        rid: 2031797866453532887
+    - modifier:
+        rid: 2031797866453532888
+      rule:
+        rid: 2031797866453532889
+    - modifier:
+        rid: 2031797913714425946
+      rule:
+        rid: 2031797913714425947
+    - modifier:
+        rid: 2935973566340137039
+      rule:
+        rid: 2935973566340137014
+    - modifier:
+        rid: 2935973566340137040
+      rule:
+        rid: 2935973566340137020
+    - modifier:
+        rid: 2935973566340137021
+      rule:
+        rid: 2935973566340137022
+  modRegisterConfigs:
+    items:
+    - {fileID: 11400000, guid: 043a9e798636f6142a1ebf504dc0edab, type: 2}
+  highlighter:
+    rid: 266424891755987002
+  references:
+    version: 2
+    RefIds:
+    - rid: 266424891755987002
+      type: {class: DefaultTextHighlighter, ns: LightSide, asm: LightSide.UniText}
+      data:
+        clickColor: {r: 0.2, g: 0.5, b: 1, a: 0.6}
+        fadeDuration: 0.25
+        hoverColor: {r: 0.2, g: 0.5, b: 1, a: 0.1}
+    - rid: 2031797866453532880
+      type: {class: BoldModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532881
+      type: {class: BoldParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532882
+      type: {class: ItalicModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532883
+      type: {class: ItalicParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532884
+      type: {class: UnderlineModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532885
+      type: {class: UnderlineParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532886
+      type: {class: StrikethroughModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532887
+      type: {class: StrikethroughParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797866453532888
+      type: {class: ListModifier, ns: LightSide, asm: LightSide.UniText}
+      data:
+        indentPerLevel: 0.55
+        bulletMarkers:
+          items:
+          - "\u2022"
+          - '-'
+          - "\xB7"
+        orderedStyles:
+          items: 000000000100000003000000
+    - rid: 2031797866453532889
+      type: {class: MarkdownListParseRule, ns: LightSide, asm: LightSide.UniText}
+      data:
+        spacesPerLevel: 2
+    - rid: 2031797913714425946
+      type: {class: LinkModifier, ns: LightSide, asm: LightSide.UniText}
+      data:
+        linkColor:
+          serializedVersion: 2
+          rgba: 4294214978
+        enableUnderline: 1
+        autoOpenUrl: 1
+    - rid: 2031797913714425947
+      type: {class: CompositeParseRule, ns: LightSide, asm: LightSide.UniText}
+      data:
+        rules:
+          items:
+          - rid: 2031797913714425948
+          - rid: 2031797913714425949
+          - rid: 2031797913714425950
+    - rid: 2031797913714425948
+      type: {class: MarkdownLinkParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797913714425949
+      type: {class: RawUrlParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2031797913714425950
+      type: {class: LinkTagParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137014
+      type: {class: SizeParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137020
+      type: {class: CSpaceParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137021
+      type: {class: ObjModifier, ns: LightSide, asm: LightSide.UniText}
+      data:
+        objects:
+          items:
+          - name: log
+            prefab: {fileID: 0}
+            width: 1
+            height: 1
+            bearingX: 0
+            bearingY: -0.1
+            advance: 1
+    - rid: 2935973566340137022
+      type: {class: ObjParseRule, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137039
+      type: {class: SizeModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
+    - rid: 2935973566340137040
+      type: {class: LetterSpacingModifier, ns: LightSide, asm: LightSide.UniText}
+      data: 
