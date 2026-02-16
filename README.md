@@ -26,7 +26,7 @@ Passes all **891,757** official Unicode conformance tests. Zero GC allocations a
 2. Click **+** > **Add package from git URL...**
 3. Enter:
    ```
-   https://github.com/LightSideMeowshop/unitext.git#1.0.0
+   https://github.com/LightSideMeowshop/unitext.git
    ```
 
 ### .unitypackage
