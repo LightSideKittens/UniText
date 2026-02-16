@@ -201,10 +201,26 @@ namespace LightSide.Samples
             ShowExample(currentExample);
         }
 
+        private readonly char[] setTextBuffer = new char[512];
+
         private void ShowExample(int index)
         {
-            demoText.Text = examples[index];
-            UpdateStatus($"Example {index + 1}/{examples.Length} - Press Space or Arrow keys");
+            if (index % 2 == 0)
+            {
+                // Even examples: use Text property (string path)
+                demoText.Text = examples[index];
+                Debug.Log($"[SetText Test] Text setter → Text = \"{demoText.Text}\"");
+            }
+            else
+            {
+                // Odd examples: use SetText (char[] path, zero-alloc)
+                var src = examples[index];
+                src.CopyTo(0, setTextBuffer, 0, src.Length);
+                demoText.SetText(setTextBuffer, 0, src.Length);
+                Debug.Log($"[SetText Test] SetText(char[]) → Text = \"{demoText.Text}\"");
+            }
+
+            UpdateStatus($"Example {index + 1}/{examples.Length} ({(index % 2 == 0 ? "Text" : "SetText")}) - Press Arrow keys");
         }
 
         private void OnLinkClicked(string url)
