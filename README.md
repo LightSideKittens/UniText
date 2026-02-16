@@ -51,11 +51,12 @@ uniText.Text = "👨‍👩‍👧‍👦🇯🇵";                    // Emoji
 
 Android production build, 100 objects x 2300 chars:
 
-| Benchmark | vs TextMeshPro | vs UI Toolkit |
-|-----------|---------------|---------------|
-| Object creation | 4.9x faster | 4.9x faster |
-| Full rebuild | 5.4x faster | 5.4x faster |
-| Layout | 20.7x faster | 3.4x faster |
+| Benchmark        | vs TextMeshPro | vs UI Toolkit |
+|------------------|----------------|---------------|
+| Object creation  | 3.4x faster    | 4.9x faster   |
+| Full rebuild     | 2.9x faster    | 5.4x faster   |
+| Layout           | 20.7x faster   | 3.4x faster   |
+| Mesh rebuild     | 7.1x faster    | 2.4x faster   |
 
 - **Zero GC allocations** at runtime — custom pooling with 95%+ hit rate
 - Multi-threaded **parallel** text processing
