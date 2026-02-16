@@ -29,10 +29,6 @@ Passes all **891,757** official Unicode conformance tests. Zero GC allocations a
    https://github.com/LightSideMeowshop/unitext.git
    ```
 
-### .unitypackage
-
-Download the latest `.unitypackage` from [Releases](https://github.com/LightSideMeowshop/unitext/releases) and import via **Assets > Import Package > Custom Package**.
-
 ## Quick Start
 
 1. Select any GameObject with **RectTransform**
