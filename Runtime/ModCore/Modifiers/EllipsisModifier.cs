@@ -42,6 +42,7 @@ namespace LightSide
 
         private const string EllipsisText = "...";
         private const int MaxIterations = 10;
+        private const float OverflowEpsilon = 0.5f;
 
         private PooledList<Range> ranges;
         private PooledBuffer<float> originalAdvances;
@@ -264,8 +265,8 @@ namespace LightSide
             var resultWidth = uniText.TextProcessor.ResultWidth;
             var resultHeight = uniText.TextProcessor.ResultHeight;
 
-            var hasHeightOverflow = maxHeight > 0 && !float.IsInfinity(maxHeight) && resultHeight > maxHeight;
-            var hasWidthOverflow = !uniText.WordWrap && maxWidth > 0 && resultWidth > maxWidth;
+            var hasHeightOverflow = maxHeight > 0 && !float.IsInfinity(maxHeight) && resultHeight > maxHeight + OverflowEpsilon;
+            var hasWidthOverflow = !uniText.WordWrap && maxWidth > 0 && resultWidth > maxWidth + OverflowEpsilon;
 
             if (!hasHeightOverflow && !hasWidthOverflow)
                 return;
@@ -332,6 +333,7 @@ namespace LightSide
                 return;
 
             var glyphScale = buf.GetGlyphScale(uniText.CurrentFontSize);
+            var epsilonInShapingUnits = glyphScale > 0 ? OverflowEpsilon / glyphScale : OverflowEpsilon;
             var maxWidthInShapingUnits = glyphScale > 0 ? maxWidth / glyphScale : maxWidth;
 
             var ellipsisWidthDisplay = MeasureEllipsisWidth();
@@ -350,7 +352,7 @@ namespace LightSide
             for (var lineIdx = 0; lineIdx < lineCount; lineIdx++)
             {
                 ref readonly var line = ref lines[lineIdx];
-                if (line.width <= maxWidthInShapingUnits)
+                if (line.width <= maxWidthInShapingUnits + epsilonInShapingUnits)
                     continue;
 
                 var lineExcess = line.width - maxWidthInShapingUnits;
@@ -696,21 +698,8 @@ namespace LightSide
                 var clusterWidth = GetClusterWidth(firstGlyph, lastGlyph, cluster, clusterData, origAdvances);
 
                 if (clusterWidth > remaining)
-                {
-                    if (left < right)
-                    {
-                        cluster = fromLeft ? right : left;
-                        clusterWidth = GetClusterWidth(firstGlyph, lastGlyph, cluster, clusterData, origAdvances);
-                        if (clusterWidth <= remaining)
-                        {
-                            fromLeft = !fromLeft;
-                            goto restore;
-                        }
-                    }
                     break;
-                }
 
-                restore:
                 RestoreClusterGlyphs(glyphs, firstGlyph, lastGlyph, cluster, clusterData, origAdvances, cpWidths, cpCount);
                 remaining -= clusterWidth;
                 restored++;
