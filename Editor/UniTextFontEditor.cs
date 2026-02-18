@@ -26,6 +26,10 @@ namespace LightSide
 
         private bool faceInfoFoldout;
 
+#if UNITEXT_DEBUG
+        private int debugAtlasIndex;
+#endif
+
         private void OnEnable()
         {
             fontDataProp = serializedObject.FindProperty("fontData");
@@ -106,6 +110,12 @@ namespace LightSide
             BeginSection("Runtime Data");
             DrawDynamicDataContent(fontAsset);
             EndSection();
+
+#if UNITEXT_DEBUG
+            BeginSection("Debug");
+            DrawDebugContent(fontAsset);
+            EndSection();
+#endif
 
             serializedObject.ApplyModifiedProperties();
             UniTextEditor.DrawLoveLabel();
@@ -286,6 +296,58 @@ namespace LightSide
             }
             GUI.backgroundColor = Color.white;
         }
+
+#if UNITEXT_DEBUG
+        private void DrawDebugContent(UniTextFont font)
+        {
+            var textures = font.AtlasTextures;
+            if (textures == null || textures.Count == 0)
+            {
+                EditorGUILayout.LabelField("No atlas textures available.");
+                return;
+            }
+
+            debugAtlasIndex = EditorGUILayout.IntSlider("Atlas Index", debugAtlasIndex, 0, textures.Count - 1);
+
+            var tex = textures[debugAtlasIndex];
+            if (tex == null)
+            {
+                EditorGUILayout.LabelField("Texture at this index is null.");
+                return;
+            }
+
+            EditorGUILayout.LabelField($"Texture: {tex.width}x{tex.height}  Format: {tex.format}");
+
+            if (GUILayout.Button("Save as PNG", GUILayout.Height(25)))
+            {
+                var path = EditorUtility.SaveFilePanel(
+                    "Save Atlas Texture as PNG",
+                    "",
+                    $"{font.name}_atlas_{debugAtlasIndex}.png",
+                    "png");
+
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var readable = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
+                    var rt = RenderTexture.GetTemporary(tex.width, tex.height, 0, RenderTextureFormat.ARGB32);
+                    Graphics.Blit(tex, rt);
+
+                    var prev = RenderTexture.active;
+                    RenderTexture.active = rt;
+                    readable.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
+                    readable.Apply();
+                    RenderTexture.active = prev;
+                    RenderTexture.ReleaseTemporary(rt);
+
+                    var pngBytes = readable.EncodeToPNG();
+                    DestroyImmediate(readable);
+
+                    File.WriteAllBytes(path, pngBytes);
+                    Debug.Log($"Atlas texture saved to: {path}");
+                }
+            }
+        }
+#endif
 
         #region Preview
 

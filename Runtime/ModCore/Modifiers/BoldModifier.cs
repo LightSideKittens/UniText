@@ -148,7 +148,7 @@ namespace LightSide
                 return 0f;
 
             var materials = fontProvider.GetMaterials(fontId);
-            if (materials == null || materials.Length == 0 || materials[0] == null)
+            if (materials == null || materials.Length == 0 || materials[0] is null)
                 return 0f;
 
             return appearance.GetCachedPropertyDelta(RuntimeHelpers.GetHashCode(materials[0]));

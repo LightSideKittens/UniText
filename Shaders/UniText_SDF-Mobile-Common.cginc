@@ -48,8 +48,14 @@ float2 ComputeScaleAndNorm(float4 vPosition, float3 normal, float4 vert, float4 
     float gradientScale = texcoord0.z;
     float spreadRatio = texcoord1.x;
 
-    // SDF scale for anti-aliasing (depends on gradientScale for sharper edges)
-    float scale = baseScale * xScaleVal * gradientScale;
+    // Derive actual padding from gradientScale and spreadRatio:
+    // gradientScale = PointSize * Padding / 72, spreadRatio = Padding / PointSize
+    // → gradientScale * spreadRatio = Padding² / 72 → Padding = sqrt(72 * gradientScale * spreadRatio)
+    // Using Padding (like TMP's _GradientScale) makes scale independent of PointSize
+    float atlasPadding = sqrt(72.0 * gradientScale * max(spreadRatio, 0.001));
+
+    // SDF scale for anti-aliasing (independent of PointSize)
+    float scale = baseScale * xScaleVal * atlasPadding;
 
     // Normalization factor for effects
     // spreadRatio = Padding / PointSize (how much of glyph size is the spread zone)

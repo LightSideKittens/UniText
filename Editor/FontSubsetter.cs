@@ -245,7 +245,6 @@ namespace LightSide
             {
                 var fontPtr = fontHandle.AddrOfPinnedObject();
 
-                // Query output count
                 uint count = shape_text(fontPtr, (uint)fontData.Length,
                     uCodepoints, (uint)uCodepoints.Length,
                     null, 0);

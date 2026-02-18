@@ -26,6 +26,7 @@ namespace LightSide
         private SerializedProperty modRegistersProp;
         private SerializedProperty modRegisterConfigsProp;
         private SerializedProperty highlighterProp;
+        private SerializedProperty raycastTargetProp;
 
         private static bool textAreaExpand;
         private static int textAreaFontSize = 14;
@@ -62,6 +63,7 @@ namespace LightSide
             modRegistersProp = serializedObject.FindProperty("modRegisters");
             modRegisterConfigsProp = serializedObject.FindProperty("modRegisterConfigs");
             highlighterProp = serializedObject.FindProperty("highlighter");
+            raycastTargetProp = serializedObject.FindProperty("m_RaycastTarget");
         }
 
         public override void OnInspectorGUI()
@@ -115,6 +117,7 @@ namespace LightSide
             EndSection();
 
             BeginSection("Interaction");
+            EditorGUILayout.PropertyField(raycastTargetProp, new GUIContent("Raycast Target"));
             EditorGUILayout.PropertyField(highlighterProp, new GUIContent("Highlighter"));
             EndSection();
 
@@ -237,9 +240,13 @@ namespace LightSide
                 var selTex = MakeTex(new Color(0.29f, 0.59f, 0.32f));
                 var deselTex = MakeTex(new Color(0.3f, 0.3f, 0.38f));
                 alignButtonSelectedStyle.normal.background = selTex;
+                alignButtonSelectedStyle.normal.scaledBackgrounds = null;
                 alignButtonSelectedStyle.hover.background = selTex;
+                alignButtonSelectedStyle.hover.scaledBackgrounds = null;
                 alignButtonStyle.normal.background = deselTex;
+                alignButtonStyle.normal.scaledBackgrounds = null;
                 alignButtonStyle.hover.background = deselTex;
+                alignButtonStyle.hover.scaledBackgrounds = null;
             }
 
             const float buttonWidth = 30f;

@@ -103,34 +103,60 @@ namespace LightSide
             }
         }
 
+        [InitializeOnLoadMethod]
+        private static void EnsureSettingsExist()
+        {
+            EditorApplication.delayCall += () =>
+            {
+                if (Resources.Load<UniTextSettings>("UniTextSettings") == null)
+                    GetOrCreateSettings();
+            };
+        }
+
         private static UniTextSettings GetOrCreateSettings()
         {
-            var settings = Resources.Load<UniTextSettings>("UniTextSettings");
+            var existing = AssetDatabase.LoadAssetAtPath<UniTextSettings>(AssetPath);
+            if (existing != null)
+                return existing;
 
-            if (settings == null)
+            string templatePath = null;
+            foreach (var guid in AssetDatabase.FindAssets("t:UniTextSettings"))
             {
-                var guids = AssetDatabase.FindAssets("t:UniTextSettings");
-                if (guids.Length > 0)
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path.Contains("/Defaults/"))
                 {
-                    var path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                    settings = AssetDatabase.LoadAssetAtPath<UniTextSettings>(path);
+                    templatePath = path;
+                    break;
                 }
             }
 
-            if (settings == null)
+            if (!Directory.Exists(ResourcesPath))
+                Directory.CreateDirectory(ResourcesPath);
+
+            if (templatePath != null)
             {
-                settings = ScriptableObject.CreateInstance<UniTextSettings>();
-
-                if (!Directory.Exists(ResourcesPath))
-                    Directory.CreateDirectory(ResourcesPath);
-
-                AssetDatabase.CreateAsset(settings, AssetPath);
-                AssetDatabase.SaveAssets();
-
-                Debug.Log($"Created UniTextSettings at {AssetPath}");
+                if (templatePath.StartsWith("Assets/"))
+                {
+                    var result = AssetDatabase.MoveAsset(templatePath, AssetPath);
+                    if (!string.IsNullOrEmpty(result))
+                        Debug.LogError($"UniText: Failed to move settings: {result}");
+                }
+                else
+                {
+                    if (!AssetDatabase.CopyAsset(templatePath, AssetPath))
+                        Debug.LogError($"UniText: Failed to copy settings from {templatePath}");
+                }
+            }
+            else
+            {
+                var empty = ScriptableObject.CreateInstance<UniTextSettings>();
+                AssetDatabase.CreateAsset(empty, AssetPath);
             }
 
-            return settings;
+            AssetDatabase.SaveAssets();
+            Debug.Log($"UniText: Settings initialized at {AssetPath}");
+
+            return AssetDatabase.LoadAssetAtPath<UniTextSettings>(AssetPath);
         }
 
         [SettingsProvider]

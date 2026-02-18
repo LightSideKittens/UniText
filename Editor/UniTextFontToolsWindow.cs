@@ -152,10 +152,7 @@ namespace LightSide
 
             uint magic = (uint)(data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]);
             return magic is
-                0x00010000 or // TrueType
-                0x74727565 or // 'true'
-                0x4F54544F or // 'OTTO' (OpenType CFF)
-                0x74746366;   // 'ttcf' (TrueType Collection)
+                0x00010000 or 0x74727565 or 0x4F54544F or 0x74746366;
         }
 
         private static UniTextFont CreateAndSaveAsset(byte[] fontBytes, string assetPath)
@@ -257,7 +254,6 @@ namespace LightSide
                 rect.x + EditorGUIUtility.labelWidth, rect.y,
                 rect.width - EditorGUIUtility.labelWidth, rect.height);
 
-            // Intercept click on the picker button (rightmost ~19px) before ObjectField processes it
             var evt = Event.current;
             if (evt.type == EventType.MouseDown && evt.button == 0)
             {
@@ -272,7 +268,6 @@ namespace LightSide
                 }
             }
 
-            // Draw the standard ObjectField (picker click is already consumed above if intercepted)
             EditorGUI.BeginChangeCheck();
             var newObj = EditorGUI.ObjectField(rect, "Font Asset", source.asset, typeof(UnityEngine.Object), false);
             if (EditorGUI.EndChangeCheck() && newObj != source.asset)
@@ -785,21 +780,17 @@ namespace LightSide
             float cellsTotalWidth = tableRect.xMax - cellsX;
             float cellWidth = cellsTotalWidth / MaxColumns;
 
-            // --- Pass 1: Row backgrounds, content, interaction ---
             float y = tableRect.y + 1;
             for (int row = 0; row < rowCount; row++)
             {
                 var (label, sets) = scriptTableRows[row];
 
-                // Row background (between left and right borders)
                 EditorGUI.DrawRect(
                     new Rect(tableRect.x + 1, y, tableRect.width - 2, RowHeight),
                     row % 2 == 0 ? cellBgEven : cellBgOdd);
 
-                // Group label
                 GUI.Label(new Rect(tableRect.x + 2, y, GroupLabelWidth - 2, RowHeight), label, EditorStyles.boldLabel);
 
-                // Cells
                 for (int i = 0; i < MaxColumns; i++)
                 {
                     float cx = cellsX + i * cellWidth + 1;
@@ -834,19 +825,12 @@ namespace LightSide
                 y += RowHeight + 1;
             }
 
-            // --- Pass 2: All borders on top ---
-            // Top border
             EditorGUI.DrawRect(new Rect(tableRect.x, tableRect.y, tableRect.width, 1), cellBorder);
-            // Left border
             EditorGUI.DrawRect(new Rect(tableRect.x, tableRect.y, 1, tableHeight), cellBorder);
-            // Right border
             EditorGUI.DrawRect(new Rect(tableRect.xMax - 1, tableRect.y, 1, tableHeight), cellBorder);
-            // Label column separator
             EditorGUI.DrawRect(new Rect(sepX, tableRect.y, 1, tableHeight), cellBorder);
-            // Cell column separators
             for (int i = 1; i < MaxColumns; i++)
                 EditorGUI.DrawRect(new Rect(cellsX + i * cellWidth, tableRect.y, 1, tableHeight), cellBorder);
-            // Horizontal row borders
             y = tableRect.y + 1;
             for (int row = 0; row < rowCount; row++)
             {
@@ -947,7 +931,6 @@ namespace LightSide
             }
             else
             {
-                // Preview approximation: script ranges + all custom text codepoints
                 var removedCodepoints = new HashSet<int>();
                 AddSelectedRanges(removedCodepoints);
                 ParseCustomTextAsCodepoints(subsetInputText, removedCodepoints);
@@ -983,7 +966,6 @@ namespace LightSide
             if (string.IsNullOrEmpty(text))
                 return result;
 
-            // Convert to codepoints
             var codepoints = new List<int>();
             for (int i = 0; i < text.Length; i++)
             {
@@ -1001,7 +983,6 @@ namespace LightSide
             if (codepoints.Count == 0)
                 return result;
 
-            // Try to use GraphemeBreaker for accurate cluster detection
             UnicodeData.EnsureInitialized();
             var provider = UnicodeData.Provider;
 
@@ -1009,11 +990,9 @@ namespace LightSide
             {
                 var breaker = new GraphemeBreaker(provider);
                 var cpArray = codepoints.ToArray();
-                var breaks = new bool[cpArray.Length + 1]; // +1: boundary after last codepoint
+                var breaks = new bool[cpArray.Length + 1];
                 breaker.GetBreakOpportunities(cpArray, breaks);
 
-                // breaks[i] = true means boundary before position i
-                // breaks[0] is always true (start), breaks[length] is always true (end)
                 int clusterStart = 0;
                 for (int i = 1; i <= cpArray.Length; i++)
                 {
@@ -1029,7 +1008,6 @@ namespace LightSide
             }
             else
             {
-                // Fallback: treat each codepoint as its own cluster
                 for (int i = 0; i < codepoints.Count; i++)
                     result.Add(new[] { codepoints[i] });
             }
@@ -1171,7 +1149,6 @@ namespace LightSide
         {
             var fontData = subsetSource.bytes;
 
-            // Classify custom text clusters by asking the font
             var codepointsToRemove = new HashSet<int>();
             AddSelectedRanges(codepointsToRemove);
 
@@ -1181,7 +1158,6 @@ namespace LightSide
             foreach (var cluster in clusters)
                 ClassifyCluster(fontData, cluster, codepointsToRemove, compositionClusters);
 
-            // Pass 1: Codepoint-based removal (GSUB closure finds contextual forms)
             if (codepointsToRemove.Count > 0)
             {
                 fontData = FontSubsetter.RemoveCodepoints(fontData, codepointsToRemove);
@@ -1189,10 +1165,8 @@ namespace LightSide
                     return null;
             }
 
-            // Pass 2: Glyph-based removal (NO closure) for compositions
             if (compositionClusters.Count > 0)
             {
-                // Re-analyze on intermediate font to get correct glyph IDs (Pass 1 remaps them)
                 var glyphsToRemove = new HashSet<uint>();
 
                 foreach (var cluster in compositionClusters)
@@ -1226,7 +1200,6 @@ namespace LightSide
         {
             var clusterGlyphs = ShapeToGlyphSet(fontData, cluster);
 
-            // Shape each codepoint individually
             var componentGlyphs = new HashSet<uint>();
             var visibleCodepoints = new List<int>();
 
@@ -1242,7 +1215,6 @@ namespace LightSide
                 if (visible) visibleCodepoints.Add(cluster[i]);
             }
 
-            // If cluster has glyphs not present in any individual component → composition
             bool isComposition = false;
             foreach (var g in clusterGlyphs)
             {
