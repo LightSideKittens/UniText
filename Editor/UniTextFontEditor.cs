@@ -517,42 +517,7 @@ namespace LightSide
             Debug.Log($"Created {created.Count} UniText Font Asset(s)");
         }
 
-        private static void CreateEmptyFontAsset()
-        {
-            var fontAsset = ScriptableObject.CreateInstance<UniTextFont>();
-
-            string directory = GetSelectedDirectory();
-            string assetPath = Path.Combine(directory, "New UniTextFontAsset.asset").Replace("\\", "/");
-            assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
-
-            AssetDatabase.CreateAsset(fontAsset, assetPath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            Selection.activeObject = fontAsset;
-            EditorGUIUtility.PingObject(fontAsset);
-
-            Debug.Log($"Created UniTextFont: {assetPath}");
-        }
-
-        private static string GetSelectedDirectory()
-        {
-            string path = "Assets";
-
-            foreach (var obj in Selection.GetFiltered<Object>(SelectionMode.Assets))
-            {
-                path = AssetDatabase.GetAssetPath(obj);
-                if (!string.IsNullOrEmpty(path) && File.Exists(path))
-                    path = Path.GetDirectoryName(path);
-
-                if (!string.IsNullOrEmpty(path))
-                    break;
-            }
-
-            return path;
-        }
-
-        [MenuItem("Assets/Create/UniText/Fonts (Combined)", true)]
+        [MenuItem("Assets/Create/UniText/Font Stack (Combined)", true)]
         private static bool CreateFontsCombinedAssetValidate()
         {
             bool firstFound = false;
@@ -573,7 +538,7 @@ namespace LightSide
             return false;
         }
         
-        [MenuItem("Assets/Create/UniText/Fonts (Per Font)", true)]
+        [MenuItem("Assets/Create/UniText/Font Stack (Per Font)", true)]
         private static bool CreateFontsAssetValidate()
         {
             foreach (var obj in Selection.objects)
@@ -581,7 +546,7 @@ namespace LightSide
             return false;
         }
 
-        [MenuItem("Assets/Create/UniText/Fonts (Combined)", false, 101)]
+        [MenuItem("Assets/Create/UniText/Font Stack (Combined)", false, 101)]
         private static void CreateFontsCombined()
         {
             var fonts = new List<UniTextFont>();
@@ -605,7 +570,7 @@ namespace LightSide
             EditorGUIUtility.PingObject(fontsAsset);
         }
 
-        [MenuItem("Assets/Create/UniText/Fonts (Per Font)", false, 102)]
+        [MenuItem("Assets/Create/UniText/Font Stack (Per Font)", false, 102)]
         private static void CreateFontsPerFont()
         {
             var created = new List<Object>();
