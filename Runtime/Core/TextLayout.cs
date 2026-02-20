@@ -182,32 +182,17 @@ namespace LightSide
             var contentArea = ascender - fontDescender;
             var halfLeading = MathF.Max(0, (computedLineHeight + settings.lineSpacing - contentArea) * 0.5f);
 
-            float topMetric;
-            float topTrim;
-            switch (settings.overEdge)
+            float topMetric = settings.overEdge switch
             {
-                case TextOverEdge.CapHeight when fontCapHeight > 0:
-                    topMetric = fontCapHeight;
-                    topTrim = ascender - topMetric;
-                    break;
-                case TextOverEdge.HalfLeading:
-                    topMetric = ascender + halfLeading;
-                    topTrim = -halfLeading;
-                    break;
-                default:
-                    topMetric = ascender;
-                    topTrim = 0f;
-                    break;
-            }
-
-            float bottomTrim = settings.underEdge switch
-            {
-                TextUnderEdge.Baseline => -fontDescender,
-                TextUnderEdge.HalfLeading => -halfLeading,
-                _ => 0f
+                TextOverEdge.CapHeight when fontCapHeight > 0 => fontCapHeight,
+                TextOverEdge.HalfLeading => ascender + halfLeading,
+                _ => ascender
             };
 
-            var effectiveHeight = totalHeight - topTrim - bottomTrim;
+            var trimAmount = ComputeTrimAmount(ascender, fontDescender, computedLineHeight,
+                settings.lineSpacing, fontCapHeight, settings.overEdge, settings.underEdge);
+
+            var effectiveHeight = totalHeight - trimAmount;
 
             var y = ComputeTextStartY(effectiveHeight, settings) + topMetric;
             float maxLineWidth = 0;
@@ -294,6 +279,42 @@ namespace LightSide
 
             width = maxLineWidth;
             height = effectiveHeight;
+        }
+
+        /// <summary>
+        /// Computes the total height trim based on edge metrics.
+        /// </summary>
+        /// <param name="ascender">Font ascender value.</param>
+        /// <param name="descender">Font descender value (typically negative).</param>
+        /// <param name="lineHeight">Font line height.</param>
+        /// <param name="lineSpacing">Additional line spacing.</param>
+        /// <param name="capHeight">Font cap height (0 if unavailable).</param>
+        /// <param name="overEdge">Top edge metric.</param>
+        /// <param name="underEdge">Bottom edge metric.</param>
+        /// <returns>The total amount to subtract from raw height to get effective height.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float ComputeTrimAmount(
+            float ascender, float descender, float lineHeight, float lineSpacing,
+            float capHeight, TextOverEdge overEdge, TextUnderEdge underEdge)
+        {
+            var contentArea = ascender - descender;
+            var halfLeading = MathF.Max(0, (lineHeight + lineSpacing - contentArea) * 0.5f);
+
+            float topTrim = overEdge switch
+            {
+                TextOverEdge.CapHeight when capHeight > 0 => ascender - capHeight,
+                TextOverEdge.HalfLeading => -halfLeading,
+                _ => 0f
+            };
+
+            float bottomTrim = underEdge switch
+            {
+                TextUnderEdge.Baseline => -descender,
+                TextUnderEdge.HalfLeading => -halfLeading,
+                _ => 0f
+            };
+
+            return topTrim + bottomTrim;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

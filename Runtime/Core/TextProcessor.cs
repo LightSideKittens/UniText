@@ -210,8 +210,11 @@ namespace LightSide
 
         private TextProcessSettings lastSettings;
 
-        private float cachedPreferredHeight;
+        private float cachedRawHeight;
         private float cachedHeightFontSize = -1;
+        private float cachedMainAscender;
+        private float cachedMainDescender;
+        private float cachedMainLineHeight;
 
         private ReadOnlyMemory<char> lastText;
 
@@ -577,15 +580,18 @@ namespace LightSide
         /// Returns cached height computed after line breaking, which includes any
         /// per-line adjustments from <see cref="OnCalculateLineHeight"/>.
         /// </remarks>
-        public float GetPreferredHeight(float fontSize, float lineSpacing = 0f)
+        public float GetPreferredHeight(float fontSize, float lineSpacing = 0f,
+            TextOverEdge overEdge = TextOverEdge.Ascent, TextUnderEdge underEdge = TextUnderEdge.Descent)
         {
             if (!hasValidLinesData) return 0;
 
-            if (Math.Abs(cachedHeightFontSize - fontSize) < 0.001f && lineSpacing == 0f)
-                return cachedPreferredHeight;
+            if (!(Math.Abs(cachedHeightFontSize - fontSize) < 0.001f && lineSpacing == 0f))
+                ComputeLineHeights(fontSize, lineSpacing);
 
-            ComputeLineHeights(fontSize, lineSpacing);
-            return cachedPreferredHeight;
+            var capHeight = fontProvider?.GetCapHeight(fontSize) ?? 0f;
+            var trim = TextLayout.ComputeTrimAmount(cachedMainAscender, cachedMainDescender,
+                cachedMainLineHeight, lineSpacing, capHeight, overEdge, underEdge);
+            return cachedRawHeight - trim;
         }
 
         /// <summary>
@@ -726,7 +732,11 @@ namespace LightSide
                     descenderRatio = -lineHeightRatio * 0.2f;
                 }
 
-                var heightLimitedSize = targetHeight / (ascenderRatio - descenderRatio + (lineCount - 1) * lineHeightRatio);
+                var capHeightRatio = fontProvider?.GetCapHeight(1f) ?? 0f;
+                var rawHeightRatio = ascenderRatio - descenderRatio + (lineCount - 1) * lineHeightRatio;
+                var trimRatio = TextLayout.ComputeTrimAmount(ascenderRatio, descenderRatio, lineHeightRatio,
+                    baseSettings.LineSpacing, capHeightRatio, baseSettings.OverEdge, baseSettings.UnderEdge);
+                var heightLimitedSize = targetHeight / (rawHeightRatio - trimRatio);
 
                 var optimalSize = Math.Clamp(Math.Min(widthLimitedSize, heightLimitedSize), minSize, maxSize);
                 hasValidLinesData = false;
@@ -782,7 +792,10 @@ namespace LightSide
             hasValidPositionedGlyphs = false;
 
             ComputeLineHeights(fontSize, baseSettings.LineSpacing);
-            return cachedPreferredHeight;
+            var capHeight = fontProvider?.GetCapHeight(fontSize) ?? 0f;
+            var trim = TextLayout.ComputeTrimAmount(cachedMainAscender, cachedMainDescender,
+                cachedMainLineHeight, baseSettings.LineSpacing, capHeight, baseSettings.OverEdge, baseSettings.UnderEdge);
+            return cachedRawHeight - trim;
         }
 
         /// <summary>
@@ -1305,7 +1318,7 @@ namespace LightSide
         }
 
         /// <summary>
-        /// Computes per-line advances and caches the total preferred height.
+        /// Computes per-line advances and caches the raw total height and font metrics.
         /// </summary>
         /// <param name="fontSize">Font size for metric calculations.</param>
         /// <param name="lineSpacing">Additional line spacing.</param>
@@ -1314,7 +1327,7 @@ namespace LightSide
             var lineCount = buf.lines.count;
             if (lineCount == 0)
             {
-                cachedPreferredHeight = 0;
+                cachedRawHeight = 0;
                 cachedHeightFontSize = fontSize;
                 return;
             }
@@ -1366,7 +1379,10 @@ namespace LightSide
                 advances[lineCount - 1] = 0f;
 
             buf.perLineAdvances.count = lineCount;
-            cachedPreferredHeight = mainAscender - mainDescender + totalLineAdvances;
+            cachedRawHeight = mainAscender - mainDescender + totalLineAdvances;
+            cachedMainAscender = mainAscender;
+            cachedMainDescender = mainDescender;
+            cachedMainLineHeight = mainLineHeight;
             cachedHeightFontSize = fontSize;
         }
 
@@ -1445,7 +1461,7 @@ namespace LightSide
                 buf.orderedRuns.Span,
                 buf.shapedGlyphs.Span,
                 buf.perLineAdvances.Span,
-                cachedPreferredHeight,
+                cachedRawHeight,
                 buf.positionedGlyphs.data, ref glyphCnt,
                 out resultWidth, out resultHeight);
             buf.positionedGlyphs.count = glyphCnt;
