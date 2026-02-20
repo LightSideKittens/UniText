@@ -69,6 +69,7 @@ namespace LightSide
 
             if (serializedSettings.ApplyModifiedProperties())
             {
+                UniTextSettingsBackup.Save(serializedSettings);
             }
         }
 
@@ -106,29 +107,33 @@ namespace LightSide
         [InitializeOnLoadMethod]
         private static void EnsureSettingsExist()
         {
-            EditorApplication.delayCall += () =>
-            {
-                if (Resources.Load<UniTextSettings>("UniTextSettings") == null)
-                    GetOrCreateSettings();
-            };
+            UniTextSettings.Changed -= OnSettingsChanged;
+            UniTextSettings.Changed += OnSettingsChanged;
+
+            EditorApplication.delayCall += () => { GetOrCreateSettings(); };
+        }
+
+        private static void OnSettingsChanged()
+        {
+            if (UniTextSettings.IsNull) return;
+            UniTextSettingsBackup.Save(new SerializedObject(UniTextSettings.Instance));
         }
 
         private static UniTextSettings GetOrCreateSettings()
         {
             var existing = AssetDatabase.LoadAssetAtPath<UniTextSettings>(AssetPath);
             if (existing != null)
-                return existing;
-
-            string templatePath = null;
-            foreach (var guid in AssetDatabase.FindAssets("t:UniTextSettings"))
             {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (path.Contains("/Defaults/"))
+                var so = new SerializedObject(existing);
+                if (UniTextSettingsBackup.Restore(so))
                 {
-                    templatePath = path;
-                    break;
+                    AssetDatabase.SaveAssets();
+                    Debug.Log("UniText: Restored settings from backup.");
                 }
+                return existing;
             }
+
+            var templatePath = FindTemplatePath();
 
             if (!Directory.Exists(ResourcesPath))
                 Directory.CreateDirectory(ResourcesPath);
@@ -156,7 +161,21 @@ namespace LightSide
             AssetDatabase.SaveAssets();
             Debug.Log($"UniText: Settings initialized at {AssetPath}");
 
-            return AssetDatabase.LoadAssetAtPath<UniTextSettings>(AssetPath);
+            var created = AssetDatabase.LoadAssetAtPath<UniTextSettings>(AssetPath);
+            if (created != null)
+                UniTextSettingsBackup.Save(new SerializedObject(created));
+            return created;
+        }
+
+        private static string FindTemplatePath()
+        {
+            foreach (var guid in AssetDatabase.FindAssets("t:UniTextSettings"))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path.Contains("/Defaults/"))
+                    return path;
+            }
+            return null;
         }
 
         [SettingsProvider]
