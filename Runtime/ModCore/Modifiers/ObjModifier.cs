@@ -275,7 +275,7 @@ namespace LightSide
 
                     if (clusterToObj.TryGetValue(globalCluster, out var obj))
                     {
-                        glyphs[g].glyphId = 0;
+                        glyphs[g].glyphId = -1;
                         glyphs[g].advanceX = obj.advance * fontSize;
                         glyphs[g].offsetX = obj.bearingX * fontSize;
                         glyphs[g].offsetY = obj.bearingY * fontSize;

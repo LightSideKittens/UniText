@@ -91,6 +91,8 @@ namespace LightSide
 
         #region Runtime Fields
 
+        private static readonly HashSet<UniTextFont> loadedFonts = new();
+
         internal Dictionary<uint, Glyph> glyphLookupDictionary;
         internal Dictionary<uint, UniTextCharacter> characterLookupDictionary;
 
@@ -115,6 +117,8 @@ namespace LightSide
 
         [ThreadStatic] private static List<uint> toAddList;
 
+        internal event Action Changed;
+        
         #endregion
 
         /// <summary>Gets the cached Unity instance ID, initializing on first access.</summary>
@@ -1011,17 +1015,23 @@ namespace LightSide
 #endif
 
             Shaper.ClearCache(GetCachedInstanceId());
-
             Cat.Meow($"UniTextFont [{name}]: Dynamic data cleared. Atlas will regenerate at runtime.");
 
-#if UNITY_EDITOR
             Changed?.Invoke();
-#endif
         }
 
+        public void InvokeChanged()
+        {
+            Changed?.Invoke();
+        }
+        
         #endregion
 
         #region Lifecycle
+
+        private void OnEnable() => loadedFonts.Add(this);
+
+        private void OnDisable() => loadedFonts.Remove(this);
 
         private void OnDestroy()
         {
@@ -1042,6 +1052,17 @@ namespace LightSide
             }
         }
 
+        /// <summary>
+        /// Clears dynamic data for all loaded font assets and invalidates shared caches.
+        /// </summary>
+        public static void ClearRuntimeData()
+        {
+            foreach (var font in loadedFonts)
+                font.ClearDynamicData();
+
+            SharedFontCache.Clear();
+        }
+
         #endregion
 
         #region Editor Support
@@ -1051,8 +1072,6 @@ namespace LightSide
         [SerializeField]
         [Tooltip("Unity Font asset to sync with (Editor only).")]
         public Font sourceFont;
-
-        public event Action Changed;
 
         private void OnValidate()
         {
@@ -1096,7 +1115,6 @@ namespace LightSide
 
         #endregion
     }
-
 
     /// <summary>
     /// Represents a character mapping from Unicode codepoint to glyph.

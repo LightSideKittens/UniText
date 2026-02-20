@@ -104,7 +104,15 @@ namespace LightSide
         [SerializeField]
         [Tooltip("Vertical text alignment within the container.")]
         private VerticalAlignment verticalAlignment = VerticalAlignment.Top;
-        
+
+        [SerializeField]
+        [Tooltip("Top edge metric for text box trimming. CapHeight removes space above capital letters.")]
+        private TextOverEdge overEdge = TextOverEdge.Ascent;
+
+        [SerializeField]
+        [Tooltip("Bottom edge metric for text box trimming. Baseline removes space below the last line.")]
+        private TextUnderEdge underEdge = TextUnderEdge.Descent;
+
         [SerializeField]
         [Tooltip("Automatically adjust font size to fit container.")]
         private bool autoSize;
@@ -335,15 +343,17 @@ namespace LightSide
             set
             {
                 if (fontStack == value) return;
-    #if UNITY_EDITOR
+                
+#if UNITY_EDITOR
                 UnlistenConfigChanged();
-    #endif
-
+#endif
+                if (fontStack != null) fontStack.Changed -= OnConfigChanged;
                 fontStack = value;
+                if (fontStack != null) fontStack.Changed += OnConfigChanged;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
                 ListenConfigChanged();
-    #endif
+#endif
                 SetDirty(DirtyFlags.Font);
             }
         }
@@ -425,6 +435,30 @@ namespace LightSide
                 if (verticalAlignment == value) return;
                 verticalAlignment = value;
                 SetDirty(DirtyFlags.Alignment);
+            }
+        }
+
+        /// <summary>Gets or sets the top edge metric for text box trimming.</summary>
+        public TextOverEdge OverEdge
+        {
+            get => overEdge;
+            set
+            {
+                if (overEdge == value) return;
+                overEdge = value;
+                SetDirty(DirtyFlags.Layout);
+            }
+        }
+
+        /// <summary>Gets or sets the bottom edge metric for text box trimming.</summary>
+        public TextUnderEdge UnderEdge
+        {
+            get => underEdge;
+            set
+            {
+                if (underEdge == value) return;
+                underEdge = value;
+                SetDirty(DirtyFlags.Layout);
             }
         }
 
@@ -790,6 +824,7 @@ namespace LightSide
 
         private void Sub()
         {
+            if (fontStack != null) fontStack.Changed += OnConfigChanged;
 #if UNITY_EDITOR
             ListenConfigChanged();
 #endif
@@ -798,6 +833,7 @@ namespace LightSide
 
         private void UnSub()
         {
+            if (fontStack != null) fontStack.Changed -= OnConfigChanged;
 #if UNITY_EDITOR
             UnlistenConfigChanged();
 #endif
@@ -878,7 +914,6 @@ namespace LightSide
         private void ListenConfigChanged()
         {
             UniTextSettings.Changed += OnConfigChanged;
-            if (fontStack != null) fontStack.Changed += OnConfigChanged;
             if (appearance != null) appearance.Changed += OnConfigChanged;
             ListenModRegisterConfig();
         }
@@ -886,7 +921,6 @@ namespace LightSide
         private void UnlistenConfigChanged()
         {
             UniTextSettings.Changed -= OnConfigChanged;
-            if (fontStack != null) fontStack.Changed -= OnConfigChanged;
             if (appearance != null) appearance.Changed -= OnConfigChanged;
             UnlistenModRegisterConfig();
         }
@@ -1009,6 +1043,8 @@ namespace LightSide
             MaxHeight = rect.height,
             HorizontalAlignment = horizontalAlignment,
             VerticalAlignment = verticalAlignment,
+            OverEdge = overEdge,
+            UnderEdge = underEdge,
             fontSize = effectiveFontSize,
             baseDirection = baseDirection,
             enableWordWrap = wordWrap

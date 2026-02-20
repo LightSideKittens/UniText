@@ -1,6 +1,10 @@
 # Generated XML documentation
 UniText.xml
 
+# User-specific settings (created from Defaults/ template)
+Resources/UniTextSettings.asset
+Resources/UniTextSettings.asset.meta
+
 # Claude Code
 .claude/
 

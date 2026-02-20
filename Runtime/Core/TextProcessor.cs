@@ -103,6 +103,24 @@ namespace LightSide
             get => layout.lineSpacing;
             set => layout.lineSpacing = value;
         }
+
+        /// <summary>
+        /// Gets or sets the top edge metric for text box trimming.
+        /// </summary>
+        public TextOverEdge OverEdge
+        {
+            get => layout.overEdge;
+            set => layout.overEdge = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the bottom edge metric for text box trimming.
+        /// </summary>
+        public TextUnderEdge UnderEdge
+        {
+            get => layout.underEdge;
+            set => layout.underEdge = value;
+        }
     }
 
     /// <summary>

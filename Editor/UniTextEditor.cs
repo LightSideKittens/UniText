@@ -19,6 +19,8 @@ namespace LightSide
         private SerializedProperty wordWrapProp;
         private SerializedProperty horizontalAlignmentProp;
         private SerializedProperty verticalAlignmentProp;
+        private SerializedProperty overEdgeProp;
+        private SerializedProperty underEdgeProp;
         private SerializedProperty autoSizeProp;
         private SerializedProperty minFontSizeProp;
         private SerializedProperty maxFontSizeProp;
@@ -56,6 +58,8 @@ namespace LightSide
             wordWrapProp = serializedObject.FindProperty("wordWrap");
             horizontalAlignmentProp = serializedObject.FindProperty("horizontalAlignment");
             verticalAlignmentProp = serializedObject.FindProperty("verticalAlignment");
+            overEdgeProp = serializedObject.FindProperty("overEdge");
+            underEdgeProp = serializedObject.FindProperty("underEdge");
             autoSizeProp = serializedObject.FindProperty("autoSize");
             minFontSizeProp = serializedObject.FindProperty("minFontSize");
             maxFontSizeProp = serializedObject.FindProperty("maxFontSize");
@@ -109,6 +113,9 @@ namespace LightSide
             DrawField(wordWrapProp, "Word Wrap", ut => ut.WordWrap, (ut, v) => ut.WordWrap = v);
             EditorGUILayout.Space(4);
             DrawAlignmentButtons();
+            EditorGUILayout.Space(4);
+            DrawField(overEdgeProp, "Over Edge", ut => ut.OverEdge, (ut, v) => ut.OverEdge = v);
+            DrawField(underEdgeProp, "Under Edge", ut => ut.UnderEdge, (ut, v) => ut.UnderEdge = v);
             EndSection();
 
             BeginSection("Modifiers");

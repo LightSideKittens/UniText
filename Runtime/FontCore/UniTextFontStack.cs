@@ -79,6 +79,7 @@ namespace LightSide
 
         private UniTextFont[] BuildResolvedFonts()
         {
+            TryInit();
             var list = new List<UniTextFont>();
             var visitedStacks = new HashSet<UniTextFontStack>();
             CollectFonts(this, list, visitedStacks);
@@ -99,8 +100,49 @@ namespace LightSide
             }
         }
 
+        internal event Action Changed;
+        [NonSerialized] private bool isInitialized;
+        
+        private void TryInit()
+        {
+            if(isInitialized) return;
+
+            isInitialized = true;
+            
+            for (var i = 0; i < fonts.Count; i++)
+            {
+                if (fonts[i] != null)
+                    fonts[i].Changed += CallChanged;
+            }
+
+            if (fallbackStack != null)
+                fallbackStack.Changed += CallChanged;
+        }
+
+        private void OnDisable()
+        {
+            DeInit();
+        }
+
+        private void OnDestroy()
+        {
+            DeInit();
+        }
+
+        private void DeInit()
+        {
+            isInitialized = false;
+            for (var i = 0; i < fonts.Count; i++)
+            {
+                if (fonts[i] != null)
+                    fonts[i].Changed -= CallChanged;
+            }
+
+            if (fallbackStack != null)
+                fallbackStack.Changed -= CallChanged;
+        }
+        
 #if UNITY_EDITOR
-        public event Action Changed;
 
         private void OnValidate()
         {
@@ -120,18 +162,6 @@ namespace LightSide
             }
 
             CallChanged();
-        }
-
-        private void OnDestroy()
-        {
-            for (var i = 0; i < fonts.Count; i++)
-            {
-                if (fonts[i] != null)
-                    fonts[i].Changed -= CallChanged;
-            }
-
-            if (fallbackStack != null)
-                fallbackStack.Changed -= CallChanged;
         }
 
         private void CallChanged()

@@ -31,6 +31,12 @@ namespace LightSide
         /// <summary>Vertical text alignment within the layout bounds.</summary>
         public VerticalAlignment verticalAlignment;
 
+        /// <summary>Top edge metric for text box trimming.</summary>
+        public TextOverEdge overEdge;
+
+        /// <summary>Bottom edge metric for text box trimming.</summary>
+        public TextUnderEdge underEdge;
+
         /// <summary>
         /// Gets the default layout settings with unlimited dimensions and top-left alignment.
         /// </summary>
@@ -41,7 +47,9 @@ namespace LightSide
             lineSpacing = 0,
             defaultLineHeight = 20,
             horizontalAlignment = HorizontalAlignment.Left,
-            verticalAlignment = VerticalAlignment.Top
+            verticalAlignment = VerticalAlignment.Top,
+            overEdge = TextOverEdge.Ascent,
+            underEdge = TextUnderEdge.Descent
         };
     }
 
@@ -171,7 +179,37 @@ namespace LightSide
             var ascender = fontAscender;
             if (ascender <= 0) ascender = computedLineHeight * 0.8f;
 
-            var y = ComputeTextStartY(totalHeight, settings) + ascender;
+            var contentArea = ascender - fontDescender;
+            var halfLeading = MathF.Max(0, (computedLineHeight + settings.lineSpacing - contentArea) * 0.5f);
+
+            float topMetric;
+            float topTrim;
+            switch (settings.overEdge)
+            {
+                case TextOverEdge.CapHeight when fontCapHeight > 0:
+                    topMetric = fontCapHeight;
+                    topTrim = ascender - topMetric;
+                    break;
+                case TextOverEdge.HalfLeading:
+                    topMetric = ascender + halfLeading;
+                    topTrim = -halfLeading;
+                    break;
+                default:
+                    topMetric = ascender;
+                    topTrim = 0f;
+                    break;
+            }
+
+            float bottomTrim = settings.underEdge switch
+            {
+                TextUnderEdge.Baseline => -fontDescender,
+                TextUnderEdge.HalfLeading => -halfLeading,
+                _ => 0f
+            };
+
+            var effectiveHeight = totalHeight - topTrim - bottomTrim;
+
+            var y = ComputeTextStartY(effectiveHeight, settings) + topMetric;
             float maxLineWidth = 0;
 
             var availableWidth = settings.maxWidth;
@@ -255,7 +293,7 @@ namespace LightSide
             }
 
             width = maxLineWidth;
-            height = totalHeight;
+            height = effectiveHeight;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -280,7 +318,8 @@ namespace LightSide
             return settings.verticalAlignment switch
             {
                 VerticalAlignment.Middle => (availableHeight - totalTextHeight) * 0.5f
-                    + (fontCapHeight > 0 ? (fontCapHeight - fontAscender - fontDescender) * 0.5f : 0f),
+                    + (settings.overEdge == TextOverEdge.Ascent && fontCapHeight > 0
+                        ? (fontCapHeight - fontAscender - fontDescender) * 0.5f : 0f),
                 VerticalAlignment.Bottom => availableHeight - totalTextHeight,
                 _ => 0
             };

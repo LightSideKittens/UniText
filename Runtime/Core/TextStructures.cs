@@ -332,6 +332,46 @@ namespace LightSide
     }
 
     /// <summary>
+    /// Specifies which metric defines the top edge of the text box.
+    /// </summary>
+    /// <remarks>
+    /// Controls how the first line is positioned relative to the container top.
+    /// Matches CSS <c>text-box-edge</c> over-edge values and Figma Vertical Trim.
+    /// </remarks>
+    public enum TextOverEdge : byte
+    {
+        /// <summary>Top edge at ascent line — default, fits all ascenders and diacritics.</summary>
+        Ascent = 0,
+
+        /// <summary>Top edge at cap height — tighter fit, matches Figma Vertical Trim.</summary>
+        CapHeight = 1,
+
+        /// <summary>Top edge includes half-leading — matches CSS and Figma Standard mode.</summary>
+        HalfLeading = 2,
+    }
+
+
+    /// <summary>
+    /// Specifies which metric defines the bottom edge of the text box.
+    /// </summary>
+    /// <remarks>
+    /// Controls how the last line contributes to the total text height.
+    /// Matches CSS <c>text-box-edge</c> under-edge values and Figma Vertical Trim.
+    /// </remarks>
+    public enum TextUnderEdge : byte
+    {
+        /// <summary>Bottom edge at descent line — default, fits all descenders.</summary>
+        Descent = 0,
+
+        /// <summary>Bottom edge at baseline — tighter fit, matches Figma Vertical Trim.</summary>
+        Baseline = 1,
+
+        /// <summary>Bottom edge includes half-leading — matches CSS and Figma Standard mode.</summary>
+        HalfLeading = 2,
+    }
+
+
+    /// <summary>
     /// Result of a shaping operation containing glyphs and metrics.
     /// </summary>
     /// <remarks>
