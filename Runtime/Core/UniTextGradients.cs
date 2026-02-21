@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace LightSide
@@ -77,18 +78,40 @@ namespace LightSide
                     lookup[ng.name] = ng.gradient;
             }
         }
+
+        public void Add(string gradientName, Gradient gradient)
+        {
+            EnsureLookup();
+            gradients.Add(new NamedGradient
+            {
+                name = gradientName,
+                gradient = gradient
+            });
+
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(this);
+#endif
+            
+            lookup.Add(gradientName, gradient);
+            OnChanged();
+        }
         
 #if UNITY_EDITOR
         private void OnValidate()
         {
             lookup = null;
+            OnChanged();
+        }
+#endif
+
+        private void OnChanged()
+        {
             if (!UniTextSettings.IsNull && UniTextSettings.Gradients == this)
             {
                 UniTextSettings.Instance.InvokeChanged();
             }
         }
-#endif
-
+        
         private void OnEnable()
         {
             lookup = null;

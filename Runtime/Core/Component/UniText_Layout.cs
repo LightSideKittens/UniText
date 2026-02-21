@@ -77,8 +77,8 @@ namespace LightSide
             textProcessor.EnsureLines(rect.width, cachedEffectiveFontSize, wordWrap);
 
             cachedPreferredHeight = (autoSize && wordWrap)
-                ? textProcessor.GetPreferredHeight(maxFontSize, 0f, overEdge, underEdge)
-                : textProcessor.GetPreferredHeight(cachedEffectiveFontSize, 0f, overEdge, underEdge);
+                ? textProcessor.GetPreferredHeight(maxFontSize, 0f, overEdge, underEdge, leadingDistribution)
+                : textProcessor.GetPreferredHeight(cachedEffectiveFontSize, 0f, overEdge, underEdge, leadingDistribution);
 
             UniTextDebug.EndSample();
         }
@@ -108,7 +108,7 @@ namespace LightSide
             if (rect.width <= 0 || rect.height <= 0) return;
 
             textProcessor.EnsureLines(rect.width, maxFontSize, wordWrap);
-            var preferredH = textProcessor.GetPreferredHeight(maxFontSize, 0f, overEdge, underEdge);
+            var preferredH = textProcessor.GetPreferredHeight(maxFontSize, 0f, overEdge, underEdge, leadingDistribution);
 
             if (rect.height < preferredH - 0.01f)
             {
@@ -118,6 +118,7 @@ namespace LightSide
                     MaxHeight = rect.height,
                     OverEdge = overEdge,
                     UnderEdge = underEdge,
+                    LeadingDistribution = leadingDistribution,
                     fontSize = maxFontSize,
                     baseDirection = baseDirection,
                     enableWordWrap = wordWrap

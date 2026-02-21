@@ -114,6 +114,10 @@ namespace LightSide
         private TextUnderEdge underEdge = TextUnderEdge.Descent;
 
         [SerializeField]
+        [Tooltip("How extra leading from line-height is distributed: HalfLeading (CSS), LeadingAbove (Figma), LeadingBelow (Android).")]
+        private LeadingDistribution leadingDistribution = LeadingDistribution.HalfLeading;
+
+        [SerializeField]
         [Tooltip("Automatically adjust font size to fit container.")]
         private bool autoSize;
 
@@ -458,6 +462,18 @@ namespace LightSide
             {
                 if (underEdge == value) return;
                 underEdge = value;
+                SetDirty(DirtyFlags.Layout);
+            }
+        }
+
+        /// <summary>Gets or sets how extra leading from line-height is distributed.</summary>
+        public LeadingDistribution LeadingDistribution
+        {
+            get => leadingDistribution;
+            set
+            {
+                if (leadingDistribution == value) return;
+                leadingDistribution = value;
                 SetDirty(DirtyFlags.Layout);
             }
         }
@@ -1045,6 +1061,7 @@ namespace LightSide
             VerticalAlignment = verticalAlignment,
             OverEdge = overEdge,
             UnderEdge = underEdge,
+            LeadingDistribution = leadingDistribution,
             fontSize = effectiveFontSize,
             baseDirection = baseDirection,
             enableWordWrap = wordWrap

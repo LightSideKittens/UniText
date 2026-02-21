@@ -21,6 +21,7 @@ namespace LightSide
         private SerializedProperty verticalAlignmentProp;
         private SerializedProperty overEdgeProp;
         private SerializedProperty underEdgeProp;
+        private SerializedProperty leadingDistributionProp;
         private SerializedProperty autoSizeProp;
         private SerializedProperty minFontSizeProp;
         private SerializedProperty maxFontSizeProp;
@@ -60,6 +61,7 @@ namespace LightSide
             verticalAlignmentProp = serializedObject.FindProperty("verticalAlignment");
             overEdgeProp = serializedObject.FindProperty("overEdge");
             underEdgeProp = serializedObject.FindProperty("underEdge");
+            leadingDistributionProp = serializedObject.FindProperty("leadingDistribution");
             autoSizeProp = serializedObject.FindProperty("autoSize");
             minFontSizeProp = serializedObject.FindProperty("minFontSize");
             maxFontSizeProp = serializedObject.FindProperty("maxFontSize");
@@ -116,6 +118,7 @@ namespace LightSide
             EditorGUILayout.Space(4);
             DrawField(overEdgeProp, "Over Edge", ut => ut.OverEdge, (ut, v) => ut.OverEdge = v);
             DrawField(underEdgeProp, "Under Edge", ut => ut.UnderEdge, (ut, v) => ut.UnderEdge = v);
+            DrawField(leadingDistributionProp, "Leading Distribution", ut => ut.LeadingDistribution, (ut, v) => ut.LeadingDistribution = v);
             EndSection();
 
             BeginSection("Modifiers");

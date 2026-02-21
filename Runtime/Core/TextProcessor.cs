@@ -121,6 +121,15 @@ namespace LightSide
             get => layout.underEdge;
             set => layout.underEdge = value;
         }
+
+        /// <summary>
+        /// Gets or sets how extra leading from line-height is distributed.
+        /// </summary>
+        public LeadingDistribution LeadingDistribution
+        {
+            get => layout.leadingDistribution;
+            set => layout.leadingDistribution = value;
+        }
     }
 
     /// <summary>
@@ -215,6 +224,8 @@ namespace LightSide
         private float cachedMainAscender;
         private float cachedMainDescender;
         private float cachedMainLineHeight;
+        private float cachedEffectiveFirstLineHeight;
+        private float cachedEffectiveLastLineHeight;
 
         private ReadOnlyMemory<char> lastText;
 
@@ -581,16 +592,18 @@ namespace LightSide
         /// per-line adjustments from <see cref="OnCalculateLineHeight"/>.
         /// </remarks>
         public float GetPreferredHeight(float fontSize, float lineSpacing = 0f,
-            TextOverEdge overEdge = TextOverEdge.Ascent, TextUnderEdge underEdge = TextUnderEdge.Descent)
+            TextOverEdge overEdge = TextOverEdge.Ascent, TextUnderEdge underEdge = TextUnderEdge.Descent,
+            LeadingDistribution leadingDistribution = LeadingDistribution.HalfLeading)
         {
             if (!hasValidLinesData) return 0;
 
             if (!(Math.Abs(cachedHeightFontSize - fontSize) < 0.001f && lineSpacing == 0f))
-                ComputeLineHeights(fontSize, lineSpacing);
+                ComputeLineHeights(fontSize, lineSpacing, leadingDistribution);
 
             var capHeight = fontProvider?.GetCapHeight(fontSize) ?? 0f;
             var trim = TextLayout.ComputeTrimAmount(cachedMainAscender, cachedMainDescender,
-                cachedMainLineHeight, lineSpacing, capHeight, overEdge, underEdge);
+                capHeight, overEdge, underEdge, leadingDistribution,
+                cachedEffectiveFirstLineHeight, cachedEffectiveLastLineHeight);
             return cachedRawHeight - trim;
         }
 
@@ -734,8 +747,10 @@ namespace LightSide
 
                 var capHeightRatio = fontProvider?.GetCapHeight(1f) ?? 0f;
                 var rawHeightRatio = ascenderRatio - descenderRatio + (lineCount - 1) * lineHeightRatio;
-                var trimRatio = TextLayout.ComputeTrimAmount(ascenderRatio, descenderRatio, lineHeightRatio,
-                    baseSettings.LineSpacing, capHeightRatio, baseSettings.OverEdge, baseSettings.UnderEdge);
+                var effectiveLineHeight = lineHeightRatio + baseSettings.LineSpacing;
+                var trimRatio = TextLayout.ComputeTrimAmount(ascenderRatio, descenderRatio,
+                    capHeightRatio, baseSettings.OverEdge, baseSettings.UnderEdge,
+                    baseSettings.LeadingDistribution, effectiveLineHeight, effectiveLineHeight);
                 var heightLimitedSize = targetHeight / (rawHeightRatio - trimRatio);
 
                 var optimalSize = Math.Clamp(Math.Min(widthLimitedSize, heightLimitedSize), minSize, maxSize);
@@ -791,10 +806,12 @@ namespace LightSide
             hasValidLinesData = true;
             hasValidPositionedGlyphs = false;
 
-            ComputeLineHeights(fontSize, baseSettings.LineSpacing);
+            ComputeLineHeights(fontSize, baseSettings.LineSpacing, baseSettings.LeadingDistribution);
             var capHeight = fontProvider?.GetCapHeight(fontSize) ?? 0f;
             var trim = TextLayout.ComputeTrimAmount(cachedMainAscender, cachedMainDescender,
-                cachedMainLineHeight, baseSettings.LineSpacing, capHeight, baseSettings.OverEdge, baseSettings.UnderEdge);
+                capHeight, baseSettings.OverEdge, baseSettings.UnderEdge,
+                baseSettings.LeadingDistribution,
+                cachedEffectiveFirstLineHeight, cachedEffectiveLastLineHeight);
             return cachedRawHeight - trim;
         }
 
@@ -1322,7 +1339,8 @@ namespace LightSide
         /// </summary>
         /// <param name="fontSize">Font size for metric calculations.</param>
         /// <param name="lineSpacing">Additional line spacing.</param>
-        private void ComputeLineHeights(float fontSize, float lineSpacing)
+        private void ComputeLineHeights(float fontSize, float lineSpacing,
+            LeadingDistribution distribution = LeadingDistribution.HalfLeading)
         {
             var lineCount = buf.lines.count;
             if (lineCount == 0)
@@ -1349,11 +1367,38 @@ namespace LightSide
             var advances = buf.perLineAdvances.data;
             var totalLineAdvances = 0f;
 
+            // Phase 1: Compute per-line effective heights (CSS line box model)
+            for (var i = 0; i < lineCount; i++)
+            {
+                float h = mainLineHeight + lineSpacing;
+                if (OnCalculateLineHeight != null)
+                {
+                    ref readonly var line = ref lines[i];
+                    OnCalculateLineHeight.Invoke(i, line.range.start, line.range.End, ref h);
+                }
+                advances[i] = h;
+            }
+
+            cachedEffectiveFirstLineHeight = advances[0];
+            cachedEffectiveLastLineHeight = advances[lineCount - 1];
+
+            // Phase 2: Compute inter-line advances based on leading distribution model
+            var prevH = advances[0];
             for (var i = 0; i < lineCount - 1; i++)
             {
+                var currH = prevH;
+                var nextH = advances[i + 1];
+                prevH = nextH;
+
+                var advance = distribution switch
+                {
+                    LeadingDistribution.LeadingAbove => nextH,
+                    LeadingDistribution.LeadingBelow => currH,
+                    _ => (currH + nextH) * 0.5f
+                };
+
                 var maxDescDepth = -mainDescender;
                 var maxAscHeight = mainAscender;
-
                 ComputeMaxLineMetrics(lines[i], orderedRuns, fontSize,
                     ref maxDescDepth, ref maxAscHeight);
 
@@ -1362,17 +1407,11 @@ namespace LightSide
                 ComputeMaxLineMetrics(lines[i + 1], orderedRuns, fontSize,
                     ref nextDescDepth, ref nextAscHeight);
 
-                var lineAdvance = maxDescDepth + nextAscHeight + lineSpacing;
+                var minAdvance = maxDescDepth + nextAscHeight + lineSpacing;
+                advance = Math.Max(advance, minAdvance);
 
-                var defaultAdvance = mainLineHeight + lineSpacing;
-                if (lineAdvance < defaultAdvance)
-                    lineAdvance = defaultAdvance;
-
-                ref readonly var line = ref lines[i];
-                OnCalculateLineHeight?.Invoke(i, line.range.start, line.range.End, ref lineAdvance);
-
-                advances[i] = lineAdvance;
-                totalLineAdvances += lineAdvance;
+                advances[i] = advance;
+                totalLineAdvances += advance;
             }
 
             if (lineCount > 0)
@@ -1446,6 +1485,8 @@ namespace LightSide
             buf.positionedGlyphs.count = 0;
             buf.positionedGlyphs.EnsureCapacity(buf.shapedGlyphs.count);
 
+            ComputeLineHeights(settings.fontSize, settings.LineSpacing, settings.LeadingDistribution);
+
             if (fontProvider != null)
             {
                 fontProvider.GetLineMetrics(settings.fontSize, out var ascender, out var descender, out var lineHeight);
@@ -1454,6 +1495,7 @@ namespace LightSide
             }
 
             Layout.SetLayoutSettings(settings.layout);
+            Layout.SetEffectiveLineHeights(cachedEffectiveFirstLineHeight, cachedEffectiveLastLineHeight);
 
             var glyphCnt = buf.positionedGlyphs.count;
             Layout.Layout(

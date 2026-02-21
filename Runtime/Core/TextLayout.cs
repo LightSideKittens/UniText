@@ -37,6 +37,9 @@ namespace LightSide
         /// <summary>Bottom edge metric for text box trimming.</summary>
         public TextUnderEdge underEdge;
 
+        /// <summary>How extra leading from line-height is distributed relative to the content area.</summary>
+        public LeadingDistribution leadingDistribution;
+
         /// <summary>
         /// Gets the default layout settings with unlimited dimensions and top-left alignment.
         /// </summary>
@@ -49,7 +52,8 @@ namespace LightSide
             horizontalAlignment = HorizontalAlignment.Left,
             verticalAlignment = VerticalAlignment.Top,
             overEdge = TextOverEdge.Ascent,
-            underEdge = TextUnderEdge.Descent
+            underEdge = TextUnderEdge.Descent,
+            leadingDistribution = LeadingDistribution.HalfLeading
         };
     }
 
@@ -93,6 +97,8 @@ namespace LightSide
         private float fontLineHeight;
         private float fontCapHeight;
         private float glyphScale = 1f;
+        private float effectiveFirstLineHeight;
+        private float effectiveLastLineHeight;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextLayout"/> class with default settings.
@@ -126,6 +132,17 @@ namespace LightSide
         public void SetLayoutSettings(LayoutSettings newSettings)
         {
             settings = newSettings;
+        }
+
+        /// <summary>
+        /// Sets the effective line heights after modifier callbacks, used for half-leading calculation.
+        /// </summary>
+        /// <param name="firstLineHeight">Effective height of the first line (0 = use base metrics).</param>
+        /// <param name="lastLineHeight">Effective height of the last line (0 = use base metrics).</param>
+        public void SetEffectiveLineHeights(float firstLineHeight, float lastLineHeight)
+        {
+            effectiveFirstLineHeight = firstLineHeight;
+            effectiveLastLineHeight = lastLineHeight;
         }
 
         /// <summary>
@@ -180,17 +197,25 @@ namespace LightSide
             if (ascender <= 0) ascender = computedLineHeight * 0.8f;
 
             var contentArea = ascender - fontDescender;
-            var halfLeading = MathF.Max(0, (computedLineHeight + settings.lineSpacing - contentArea) * 0.5f);
+            var firstLeading = MathF.Max(0, effectiveFirstLineHeight - contentArea);
+            var topLeading = settings.leadingDistribution switch
+            {
+                LeadingDistribution.LeadingAbove => firstLeading,
+                LeadingDistribution.LeadingBelow => 0f,
+                _ => firstLeading * 0.5f
+            };
 
             float topMetric = settings.overEdge switch
             {
                 TextOverEdge.CapHeight when fontCapHeight > 0 => fontCapHeight,
-                TextOverEdge.HalfLeading => ascender + halfLeading,
+                TextOverEdge.HalfLeading => ascender + topLeading,
                 _ => ascender
             };
 
-            var trimAmount = ComputeTrimAmount(ascender, fontDescender, computedLineHeight,
-                settings.lineSpacing, fontCapHeight, settings.overEdge, settings.underEdge);
+            var trimAmount = ComputeTrimAmount(ascender, fontDescender,
+                fontCapHeight, settings.overEdge, settings.underEdge,
+                settings.leadingDistribution,
+                effectiveFirstLineHeight, effectiveLastLineHeight);
 
             var effectiveHeight = totalHeight - trimAmount;
 
@@ -282,35 +307,53 @@ namespace LightSide
         }
 
         /// <summary>
-        /// Computes the total height trim based on edge metrics.
+        /// Computes the total height trim based on edge metrics and leading distribution.
         /// </summary>
         /// <param name="ascender">Font ascender value.</param>
         /// <param name="descender">Font descender value (typically negative).</param>
-        /// <param name="lineHeight">Font line height.</param>
-        /// <param name="lineSpacing">Additional line spacing.</param>
         /// <param name="capHeight">Font cap height (0 if unavailable).</param>
         /// <param name="overEdge">Top edge metric.</param>
         /// <param name="underEdge">Bottom edge metric.</param>
+        /// <param name="distribution">How extra leading is distributed.</param>
+        /// <param name="effectiveFirstLineHeight">Effective height of the first line (including modifier adjustments).</param>
+        /// <param name="effectiveLastLineHeight">Effective height of the last line (including modifier adjustments).</param>
         /// <returns>The total amount to subtract from raw height to get effective height.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ComputeTrimAmount(
-            float ascender, float descender, float lineHeight, float lineSpacing,
-            float capHeight, TextOverEdge overEdge, TextUnderEdge underEdge)
+            float ascender, float descender,
+            float capHeight, TextOverEdge overEdge, TextUnderEdge underEdge,
+            LeadingDistribution distribution,
+            float effectiveFirstLineHeight, float effectiveLastLineHeight)
         {
             var contentArea = ascender - descender;
-            var halfLeading = MathF.Max(0, (lineHeight + lineSpacing - contentArea) * 0.5f);
+            var firstLeading = MathF.Max(0, effectiveFirstLineHeight - contentArea);
+            var lastLeading = MathF.Max(0, effectiveLastLineHeight - contentArea);
+
+            var topLeading = distribution switch
+            {
+                LeadingDistribution.LeadingAbove => firstLeading,
+                LeadingDistribution.LeadingBelow => 0f,
+                _ => firstLeading * 0.5f
+            };
+
+            var bottomLeading = distribution switch
+            {
+                LeadingDistribution.LeadingAbove => 0f,
+                LeadingDistribution.LeadingBelow => lastLeading,
+                _ => lastLeading * 0.5f
+            };
 
             float topTrim = overEdge switch
             {
                 TextOverEdge.CapHeight when capHeight > 0 => ascender - capHeight,
-                TextOverEdge.HalfLeading => -halfLeading,
+                TextOverEdge.HalfLeading => -topLeading,
                 _ => 0f
             };
 
             float bottomTrim = underEdge switch
             {
                 TextUnderEdge.Baseline => -descender,
-                TextUnderEdge.HalfLeading => -halfLeading,
+                TextUnderEdge.HalfLeading => -bottomLeading,
                 _ => 0f
             };
 

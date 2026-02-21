@@ -24,8 +24,19 @@ namespace LightSide
         [Tooltip("Named gradients for <gradient=name> tags.")]
         private UniTextGradients gradients;
 
-        /// <summary>Gets the named gradients asset.</summary>
-        public static UniTextGradients Gradients => Instance?.gradients;
+        /// <summary>Gets or sets the named gradients asset.</summary>
+        public static UniTextGradients Gradients
+        {
+            get => Instance.gradients;
+            set
+            {
+                if (value != Instance.gradients)
+                { 
+                    Instance.gradients = value;
+                    Changed?.Invoke();
+                }
+            }
+        }
 
         public static event Action Changed;
 
@@ -93,13 +104,13 @@ namespace LightSide
             Changed?.Invoke();
         }
 
+        internal void InvokeChanged() => Changed?.Invoke();
+        
 #if UNITY_EDITOR
         private void OnValidate()
         {
             Changed?.Invoke();
         }
-        
-        internal void InvokeChanged() => Changed?.Invoke();
 #endif
     }
 }
