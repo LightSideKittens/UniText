@@ -299,6 +299,7 @@ namespace LightSide
         /// <summary>Gets the current rendering pixel size.</summary>
         public static int GetCurrentPixelSize() => currentPixelSize;
 
+    #if !UNITY_WEBGL || UNITY_EDITOR
         /// <summary>Attempts to render a glyph to RGBA pixels.</summary>
         /// <param name="glyphIndex">Glyph index to render.</param>
         /// <param name="targetSize">Target pixel size.</param>
@@ -398,6 +399,7 @@ namespace LightSide
             var glyphIndex = GetGlyphIndex(codepoint);
             return TryRenderGlyph(glyphIndex, targetSize, out result);
         }
+    #endif
 
         private static void DisposeFace()
         {
