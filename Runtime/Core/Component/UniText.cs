@@ -965,11 +965,6 @@ namespace LightSide
             subscribedConfigs.Clear();
         }
 
-        private void OnConfigChanged()
-        {
-            SetDirty(DirtyFlags.All);
-        }
-
         private void OnModRegisterConfigChanged()
         {
             ReInitModifiers();
@@ -997,6 +992,11 @@ namespace LightSide
         }
     #endif
 
+        private void OnConfigChanged()
+        {
+            SetDirty(DirtyFlags.All);
+        }
+        
         #endregion
 
         #region Rebuild

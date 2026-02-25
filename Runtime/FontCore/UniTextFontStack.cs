@@ -163,12 +163,12 @@ namespace LightSide
 
             CallChanged();
         }
-
+    #endif
+        
         private void CallChanged()
         {
             resolvedFonts = null;
             Changed?.Invoke();
         }
-    #endif
     }
 }
