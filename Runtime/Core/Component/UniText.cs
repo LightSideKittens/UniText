@@ -1290,7 +1290,14 @@ namespace LightSide
 
         private void ClearAllRenderers()
         {
-            for (var i = 0; i < subMeshRenderers.Count; i++) subMeshRenderers[i].renderer?.Clear();
+            for (var i = 0; i < subMeshRenderers.Count; i++)
+            {
+                if(subMeshRenderers[i].renderer != null)
+                {
+                    subMeshRenderers[i].renderer.Clear();
+                    DestroyImmediate(subMeshRenderers[i].renderer.gameObject);
+                }
+            }
         }
 
         private void ReleaseSubMeshStencilMaterials()
