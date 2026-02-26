@@ -1267,7 +1267,9 @@ namespace LightSide
         {
             var go = new GameObject("-_UTSM_-") { hideFlags = HideFlags.HideAndDontSave };
             go.transform.SetParent(transform, false);
-
+#if UNITY_EDITOR
+            UnityEditor.Undo.RegisterCreatedObjectUndo(go, "CreateUniTextObject");
+#endif
             var rt = go.AddComponent<RectTransform>();
             rt.pivot = rectTransform.pivot;
             rt.anchorMin = Vector2.zero;
