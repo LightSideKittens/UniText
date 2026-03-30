@@ -1,0 +1,18 @@
+{
+    "name": "LightSide.UniText.Editor",
+    "rootNamespace": "LightSide.Editor",
+    "references": [
+        "GUID:6572381e8157783499bf6ce8f56b9292"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

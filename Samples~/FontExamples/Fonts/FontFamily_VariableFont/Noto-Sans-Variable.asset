@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ecf69df938478886267ac0693c4369, type: 3}
+  m_Name: Noto-Sans-Variable
+  m_EditorClassIdentifier: LightSide.UniText::LightSide.UniTextFontStack
+  families:
+  - primary: {fileID: 11400000, guid: 831eeb10b51cd224eb8dd888ca14d364, type: 2}
+    faces:
+    - {fileID: 11400000, guid: 39fcd287c5549b54b8b0dd5119a5ef0b, type: 2}
+  fallbackStack: {fileID: 0}

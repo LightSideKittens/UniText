@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f8983beb12bb84796c28939f4596ab, type: 3}
+  m_Name: UniTextSettings
+  m_EditorClassIdentifier: 
+  gradients: {fileID: 11400000, guid: 25571032a92321f4997329d90f499d06, type: 2}
+  requiredShaders:
+  - {fileID: 4800000, guid: 0b3a066e1f5126445825763f141c5037, type: 3}
+  - {fileID: 4800000, guid: fd71b6fb9b256b149b661d328b3b1b35, type: 3}
+  - {fileID: 4800000, guid: b7fa399c17d86b5419ba01bb3f7e7ac8, type: 3}
+  defaultFontStack: {fileID: 11400000, guid: 72f6e3edfbc82804791ebe8e4814fa46, type: 2}
+  textPrefab: {fileID: 7347632301909959781, guid: af7b825e8f1c79449a3193230b53883b, type: 3}
+  buttonPrefab: {fileID: 1641471697769085268, guid: 23ad2355693ddad489efbffd79bc37b7, type: 3}
+  dictionaries:
+    items: []

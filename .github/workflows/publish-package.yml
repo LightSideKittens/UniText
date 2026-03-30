@@ -1,0 +1,93 @@
+name: Publish to Registry
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Extract version and determine dist-tag
+        id: meta
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          if [[ "$VERSION" == *-* ]]; then
+            PRERELEASE="${VERSION#*-}"
+            TAG="${PRERELEASE%%.*}"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            echo "Detected pre-release: tag=$TAG"
+          else
+            CURRENT=$(curl -sf -H "Authorization: Bearer ${{ secrets.REGISTRY_TOKEN }}" \
+              https://registry.lightside.media/media.lightside.unitext 2>/dev/null \
+              | node -e "try{const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d['dist-tags']?.latest||'')}catch{}" 2>/dev/null)
+
+            if [ -n "$CURRENT" ]; then
+              CURRENT_MAJOR="${CURRENT%%.*}"
+              NEW_MAJOR="${VERSION%%.*}"
+              if [ "$NEW_MAJOR" -lt "$CURRENT_MAJOR" ] 2>/dev/null; then
+                TAG="v$NEW_MAJOR"
+                echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+                echo "Older major version: tag=$TAG (latest is $CURRENT)"
+              else
+                TAG="latest"
+                echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+                echo "New stable release: tag=latest"
+              fi
+            else
+              TAG="latest"
+              echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+              echo "First publish: tag=latest"
+            fi
+          fi
+
+      - name: Set version in package.json
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '${{ steps.meta.outputs.version }}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4) + '\n');
+          "
+
+      - name: Pack tarball
+        run: npm pack
+
+      - name: Upload tarball to R2
+        run: |
+          npx wrangler r2 object put "registry-packages/media.lightside.unitext-${{ steps.meta.outputs.version }}.tgz" \
+            --file="media.lightside.unitext-${{ steps.meta.outputs.version }}.tgz" \
+            --content-type="application/octet-stream" \
+            --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Register metadata
+        run: |
+          MANIFEST=$(node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.dist = { tarball: 'https://registry.lightside.media/media.lightside.unitext/-/media.lightside.unitext-${{ steps.meta.outputs.version }}.tgz' };
+            console.log(JSON.stringify(pkg));
+          ")
+
+          curl -sv -X POST "https://registry.lightside.media/-/admin/publish" \
+            -H "Authorization: Bearer ${{ secrets.REGISTRY_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"name\": \"media.lightside.unitext\",
+              \"version\": \"${{ steps.meta.outputs.version }}\",
+              \"tag\": \"${{ steps.meta.outputs.tag }}\",
+              \"manifest\": $MANIFEST
+            }"
+
+          echo ""
+          echo "Published media.lightside.unitext@${{ steps.meta.outputs.version }} with tag=${{ steps.meta.outputs.tag }}"
