@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace LightSide
@@ -170,68 +169,28 @@ namespace LightSide
             var reader = new ParameterReader(param);
             var axisIndex = 0;
 
-            while (reader.Next(out var token) && axisIndex < AxisCount)
+            while (axisIndex < AxisCount)
             {
-                if (!token.IsEmpty && !(token.Length == 1 && token[0] == '~'))
+                if (!reader.NextUnitFloat(out var value, out var unit))
                 {
-                    if (TryParseAxisValue(token, out var axisValue))
-                    {
-                        config.mask |= (AxisMask)(1 << axisIndex);
-                        SetAxis(ref config, axisIndex, axisValue);
-                    }
+                    if (reader.IsEmpty) break;
+                    axisIndex++;
+                    continue;
                 }
 
+                var mode = unit switch
+                {
+                    ParameterReader.UnitKind.Percent => ValueMode.Percent,
+                    ParameterReader.UnitKind.Delta => ValueMode.Delta,
+                    _ => ValueMode.Absolute
+                };
+
+                config.mask |= (AxisMask)(1 << axisIndex);
+                SetAxis(ref config, axisIndex, new AxisValue { value = value, mode = mode });
                 axisIndex++;
             }
 
             return config.mask != AxisMask.None;
-        }
-
-        private static bool TryParseAxisValue(ReadOnlySpan<char> token, out AxisValue result)
-        {
-            result = default;
-
-            if (token.IsEmpty)
-                return false;
-
-            if (token[^1] == '%')
-            {
-                if (float.TryParse(token[..^1], NumberStyles.Float, CultureInfo.InvariantCulture, out var pct))
-                {
-                    result.value = pct;
-                    result.mode = ValueMode.Percent;
-                    return true;
-                }
-                return false;
-            }
-
-            if (token[0] == '+')
-            {
-                if (float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var delta))
-                {
-                    result.value = delta;
-                    result.mode = ValueMode.Delta;
-                    return true;
-                }
-                return false;
-            }
-
-            if (float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var abs))
-            {
-                if (token[0] == '-')
-                {
-                    result.value = abs;
-                    result.mode = ValueMode.Delta;
-                }
-                else
-                {
-                    result.value = abs;
-                    result.mode = ValueMode.Absolute;
-                }
-                return true;
-            }
-
-            return false;
         }
 
         private static void SetAxis(ref VariationConfig config, int index, AxisValue value)

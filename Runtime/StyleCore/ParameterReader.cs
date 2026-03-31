@@ -51,12 +51,15 @@ namespace LightSide
             return true;
         }
 
+        /// <summary>Parses a span as float using InvariantCulture. For pre-extracted tokens where Next() was already called.</summary>
+        public static bool ParseFloat(ReadOnlySpan<char> s, out float value) =>
+            float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+
         /// <summary>Reads the next token as a float. Returns false if missing or unparseable.</summary>
         public bool NextFloat(out float value, float defaultValue = 0f)
         {
             value = defaultValue;
-            return Next(out var token) && !token.IsEmpty &&
-                   float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+            return Next(out var token) && !token.IsEmpty && ParseFloat(token, out value);
         }
 
         /// <summary>Reads the next token as an int. Returns false if missing or unparseable.</summary>
@@ -74,6 +77,43 @@ namespace LightSide
             return Next(out var token) && !token.IsEmpty && ColorParsing.TryParse(token, out value);
         }
         
+        /// <summary>Unit type for values parsed by <see cref="NextUnitFloat"/>.</summary>
+        public enum UnitKind : byte { Absolute, Percent, Em, Delta }
+
+        /// <summary>
+        /// Reads the next token as a float with optional unit suffix.
+        /// Recognizes: <c>24</c> (absolute), <c>150%</c>, <c>0.5em</c>, <c>+10</c>/<c>-5</c> (delta).
+        /// Always uses InvariantCulture.
+        /// </summary>
+        public bool NextUnitFloat(out float value, out UnitKind unit, float defaultValue = 0f)
+        {
+            value = defaultValue;
+            unit = UnitKind.Absolute;
+
+            if (!Next(out var token) || token.IsEmpty)
+                return false;
+
+            if (token[^1] == '%')
+            {
+                unit = UnitKind.Percent;
+                return float.TryParse(token[..^1], NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+            }
+
+            if (token.Length > 2 && (token[^1] == 'm' || token[^1] == 'M') && (token[^2] == 'e' || token[^2] == 'E'))
+            {
+                unit = UnitKind.Em;
+                return float.TryParse(token[..^2], NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+            }
+
+            if (token[0] == '+' || (token[0] == '-' && token.Length > 1))
+            {
+                unit = UnitKind.Delta;
+                return float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+            }
+
+            return float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+        }
+
         /// <summary>Reads the next token as a string (allocates). Returns false if missing or empty.</summary>
         public bool NextString(out string value)
         {

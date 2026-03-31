@@ -44,54 +44,23 @@ namespace LightSide
 
         protected override void OnApply(int start, int end, string parameter)
         {
-            if (string.IsNullOrEmpty(parameter))
+            var reader = new ParameterReader(parameter);
+            if (!reader.NextUnitFloat(out var value, out var unit))
                 return;
 
-            if (!TryParseSize(parameter, out var scale))
-                return;
+            var baseSize = buffers.shapingFontSize > 0 ? buffers.shapingFontSize : uniText.FontSize;
+            var scale = unit switch
+            {
+                ParameterReader.UnitKind.Percent => value / 100f,
+                ParameterReader.UnitKind.Delta => (baseSize + value) / baseSize,
+                _ => value / baseSize
+            };
+            if (scale <= 0f) return;
 
             var cpCount = buffers.codepoints.count;
             var clampedEnd = Math.Min(end, cpCount);
             for (var i = start; i < clampedEnd; i++)
                 attribute.buffer[i] = scale;
-        }
-
-        private bool TryParseSize(string param, out float scale)
-        {
-            scale = 0f;
-            if (string.IsNullOrEmpty(param))
-                return false;
-
-            var baseSize = buffers.shapingFontSize > 0 ? buffers.shapingFontSize : uniText.FontSize;
-
-            if (param[^1] == '%')
-            {
-                if (float.TryParse(param.AsSpan(0, param.Length - 1), out var percent))
-                {
-                    scale = percent / 100f;
-                    return scale > 0f;
-                }
-                return false;
-            }
-
-            if (param[0] == '+' || param[0] == '-')
-            {
-                if (float.TryParse(param, out var delta))
-                {
-                    var targetSize = baseSize + delta;
-                    scale = targetSize / baseSize;
-                    return scale > 0f;
-                }
-                return false;
-            }
-
-            if (float.TryParse(param, out var absoluteSize))
-            {
-                scale = absoluteSize / baseSize;
-                return scale > 0f;
-            }
-
-            return false;
         }
 
         private void OnShaped()

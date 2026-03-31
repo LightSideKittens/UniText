@@ -108,13 +108,13 @@ namespace LightSide
 
         protected override void OnApply(int start, int end, string parameter)
         {
-            var reader = new ParameterReader(parameter);
+            var reader = new ParameterReader(string.IsNullOrEmpty(parameter) ? DefaultSpacing : parameter);
 
-            reader.Next(out var spacingToken);
-            var spacingStr = spacingToken.IsEmpty ? DefaultSpacing : spacingToken.ToString();
+            if (!reader.NextUnitFloat(out var rawSpacing, out var unit, 0.3f))
+                unit = ParameterReader.UnitKind.Absolute;
 
-            if (!TryParseSpacing(spacingStr, out var spacing))
-                return;
+            var baseSize = buffers.shapingFontSize > 0 ? buffers.shapingFontSize : uniText.FontSize;
+            var spacing = unit == ParameterReader.UnitKind.Em ? rawSpacing * baseSize : rawSpacing;
 
             var mono = false;
             if (reader.Next(out var monoToken) && !monoToken.IsEmpty)
@@ -145,33 +145,6 @@ namespace LightSide
             }
 
             buffers.virtualCodepoints.Add((uint)TatweelCodepoint);
-        }
-
-        private bool TryParseSpacing(string param, out float spacing)
-        {
-            spacing = 0f;
-            if (string.IsNullOrEmpty(param))
-                return false;
-
-            var baseSize = buffers.shapingFontSize > 0 ? buffers.shapingFontSize : uniText.FontSize;
-
-            if (param.Length > 2 && param.EndsWith("em", StringComparison.OrdinalIgnoreCase))
-            {
-                if (float.TryParse(param.AsSpan(0, param.Length - 2), out var emValue))
-                {
-                    spacing = emValue * baseSize;
-                    return true;
-                }
-                return false;
-            }
-
-            if (float.TryParse(param, out var pxValue))
-            {
-                spacing = pxValue;
-                return true;
-            }
-
-            return false;
         }
 
         private void OnRebuilding()

@@ -162,14 +162,8 @@ namespace LightSide
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float ParsePosition(string parameter)
         {
-            if (string.IsNullOrEmpty(parameter))
-                return 1f;
-
-            if (float.TryParse(parameter, System.Globalization.NumberStyles.Float,
-                    System.Globalization.CultureInfo.InvariantCulture, out var value))
-                return Math.Clamp(value, 0f, 1f);
-
-            return 1f;
+            var reader = new ParameterReader(parameter);
+            return reader.NextFloat(out var value) ? Math.Clamp(value, 0f, 1f) : 1f;
         }
 
         private void OnShaped()

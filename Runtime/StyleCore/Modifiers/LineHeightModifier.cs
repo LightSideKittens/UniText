@@ -60,21 +60,19 @@ namespace LightSide
                 return;
 
             var isSpacing = false;
-            ReadOnlySpan<char> valueSpan;
 
-            if (reader.Next(out var second))
-            {
-                if (first.Length == 1 && (first[0] == 's' || first[0] == 'S'))
-                    isSpacing = true;
-                valueSpan = second;
-            }
-            else
-            {
-                valueSpan = first;
-            }
+            bool hasMode = first.Length == 1 &&
+                           (first[0] == 'h' || first[0] == 'H' || first[0] == 's' || first[0] == 'S');
+            if (hasMode)
+                isSpacing = first[0] == 's' || first[0] == 'S';
 
-            if (!TryParseValue(valueSpan, out var value, out var isAbsolute))
+            var valueReader = hasMode ? reader : new ParameterReader(parameter);
+            if (!valueReader.NextUnitFloat(out var value, out var unit))
                 return;
+
+            var isAbsolute = unit == ParameterReader.UnitKind.Absolute || unit == ParameterReader.UnitKind.Delta;
+            if (unit == ParameterReader.UnitKind.Percent)
+                value /= 100f;
 
             ranges.Add(new Range
             {
@@ -84,46 +82,6 @@ namespace LightSide
                 isAbsolute = isAbsolute,
                 isSpacing = isSpacing
             });
-        }
-
-        private static bool TryParseValue(ReadOnlySpan<char> param, out float value, out bool isAbsolute)
-        {
-            value = 0f;
-            isAbsolute = false;
-
-            if (param.IsEmpty)
-                return false;
-
-            if (param[^1] == '%')
-            {
-                if (float.TryParse(param.Slice(0, param.Length - 1), out var percent))
-                {
-                    value = percent / 100f;
-                    isAbsolute = false;
-                    return true;
-                }
-                return false;
-            }
-
-            if (param.Length > 2 && param.EndsWith("em".AsSpan(), StringComparison.OrdinalIgnoreCase))
-            {
-                if (float.TryParse(param.Slice(0, param.Length - 2), out var emValue))
-                {
-                    value = emValue;
-                    isAbsolute = false;
-                    return true;
-                }
-                return false;
-            }
-
-            if (float.TryParse(param, out var numValue))
-            {
-                value = numValue;
-                isAbsolute = true;
-                return true;
-            }
-
-            return false;
         }
 
         private void OnCalculateLineHeight(int lineIndex, int lineStartCluster, int lineEndCluster, ref float lineAdvance)

@@ -35,9 +35,22 @@ namespace LightSide
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ut_gpu_get_upload_batch_event();
 
-        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ut_gpu_get_renderer();
 #endif
+
+#if UNITY_EDITOR
+        static GpuUpload() => Reseter.UnmanagedCleaning += Cleanup;
+#endif
+
+        private static void Cleanup()
+        {
+            for (int i = 0; i < pendingBuffers.Count; i++)
+                pendingBuffers[i].Dispose();
+            pendingBuffers.Clear();
+            cmdBuffer?.Dispose();
+            cmdBuffer = null;
+            initialized = false;
+            supported = false;
+        }
 
         private static bool initialized;
         private static bool supported;
@@ -66,19 +79,15 @@ namespace LightSide
             try
             {
                 batchEventFunc = ut_gpu_get_upload_batch_event();
-                int renderer = ut_gpu_get_renderer();
+                var renderer = SystemInfo.graphicsDeviceType;
                 bool rendererSupported = renderer switch
                 {
-                    2 => true,   // D3D11
-#if UNITY_STANDALONE_WIN
-                    18 => true,  // D3D12
-#endif
-                    16 => true,  // Metal
-#if UNITY_STANDALONE_LINUX || UNITY_ANDROID
-                    17 => true,  // OpenGLCore
-                    11 => true,  // OpenGLES3
-                    21 => true,  // Vulkan
-#endif
+                    GraphicsDeviceType.Direct3D11 => true,
+                    GraphicsDeviceType.Direct3D12 => true,
+                    GraphicsDeviceType.Metal => true,
+                    GraphicsDeviceType.OpenGLCore => true,
+                    GraphicsDeviceType.OpenGLES3 => true,
+                    GraphicsDeviceType.Vulkan => true,
                     _ => false
                 };
                 supported = batchEventFunc != IntPtr.Zero && rendererSupported;

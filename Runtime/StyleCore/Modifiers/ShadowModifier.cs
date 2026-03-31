@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using UnityEngine;
 
 namespace LightSide
@@ -169,7 +168,7 @@ namespace LightSide
                 {
                     color = c;
                 }
-                else if (float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var f))
+                else if (ParameterReader.ParseFloat(token, out var f))
                 {
                     switch (numIdx)
                     {

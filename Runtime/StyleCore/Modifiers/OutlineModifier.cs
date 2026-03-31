@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using UnityEngine;
 
 namespace LightSide
@@ -107,7 +106,7 @@ namespace LightSide
                 if (ColorParsing.TryParse(token, out var c))
                     color = c;
                 else
-                    float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out dilate);
+                    ParameterReader.ParseFloat(token, out dilate);
             }
         }
     }

@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 
 namespace LightSide
 {
@@ -56,7 +55,8 @@ namespace LightSide
         protected override void OnApply(int start, int end, string parameter)
         {
             int cssWeight;
-            if (parameter != null && int.TryParse(parameter, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
+            var reader = new ParameterReader(parameter);
+            if (reader.NextInt(out var parsed))
             {
                 cssWeight = Math.Clamp(parsed, 100, 900);
             }

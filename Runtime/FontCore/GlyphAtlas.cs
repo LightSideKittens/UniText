@@ -519,7 +519,7 @@ namespace LightSide
         [BurstCompile(FloatPrecision.Standard, FloatMode.Fast)]
         private struct EmojiCopyJob : IJobParallelFor
         {
-            [NativeDisableUnsafePtrRestriction, ReadOnly] public unsafe byte** srcPtrs;
+            [NativeDisableUnsafePtrRestriction, ReadOnly] public unsafe long* srcPtrs;
             [NativeDisableUnsafePtrRestriction] public unsafe long* pageBasePtrs;
             [NativeDisableUnsafePtrRestriction, ReadOnly] public unsafe EmojiCopyTask* tasks;
             public int pageStride;
@@ -539,7 +539,7 @@ namespace LightSide
             {
                 var t = tasks[i];
                 byte* dstBase = (byte*)pageBasePtrs[t.pageIndex];
-                byte* srcBase = srcPtrs[i];
+                byte* srcBase = (byte*)srcPtrs[i];
 
                 for (int y = 0; y < t.tileSize; y++)
                     UnsafeUtility.MemClear(dstBase + (t.tileY + y) * pageStride + t.tileX * 4, t.tileSize * 4);
@@ -631,7 +631,7 @@ namespace LightSide
 
             new EmojiCopyJob
             {
-                srcPtrs = (byte**)srcPtrs.GetUnsafeReadOnlyPtr(),
+                srcPtrs = (long*)srcPtrs.GetUnsafeReadOnlyPtr(),
                 pageBasePtrs = (long*)pageBasePtrs.GetUnsafePtr(),
                 tasks = (EmojiCopyJob.EmojiCopyTask*)tasks.GetUnsafeReadOnlyPtr(),
                 pageStride = PageSize * 4
