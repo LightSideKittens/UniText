@@ -25,6 +25,12 @@ namespace LightSide
         private static extern void JS_GpuUpload_TexSubImage3D(
             int texId, int mipLevel, int sliceIndex,
             int width, int height, int bytesPerPixel, IntPtr pixels);
+
+        [DllImport("__Internal")]
+        private static extern void JS_GpuUpload_TexSubImage3DRegion(
+            int texId, int mipLevel, int sliceIndex,
+            int dstX, int dstY, int width, int height,
+            int bytesPerPixel, int srcRowPitch, IntPtr pixels);
 #else
     #if (UNITY_IOS || UNITY_TVOS) && !UNITY_EDITOR
         private const string LibName = "__Internal";
@@ -97,15 +103,15 @@ namespace LightSide
                 supported = false;
             }
 #endif
-
+            supported = false;
             if (supported)
             {
                 cmdBuffer = new CommandBuffer { name = "UniText GPU Upload" };
-                Cat.Meow("[GpuUpload] Native per-slice upload initialized");
+                Cat.Meow($"[GpuUpload] Native per-slice upload initialized {SystemInfo.graphicsDeviceType}");
             }
             else
             {
-                Cat.Meow("[GpuUpload] Not supported, falling back to Apply()");
+                Cat.Meow($"[GpuUpload] Not supported, falling back to Apply() {SystemInfo.graphicsDeviceType}");
             }
         }
 
@@ -119,6 +125,9 @@ namespace LightSide
             public int sliceIndex;
             public int mipLevel;
             public int bytesPerPixel;
+            public int dstX;
+            public int dstY;
+            public int srcRowPitch;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -232,6 +241,80 @@ namespace LightSide
             pendingBuffers.Add(batchBuffer);
         }
 #endif
+
+        public struct SubRegion
+        {
+            public int sliceIndex;
+            public int dstX, dstY;
+            public int width, height;
+            public int srcRowPitch;
+            public IntPtr pixelData;
+        }
+
+        public static unsafe void UploadSubRegions(Texture2DArray atlas, SubRegion* regions, int count, IntPtr nativeTexPtr)
+        {
+            if (count == 0) return;
+            if (!IsSupported) return;
+
+            int bpp = BppForFormat(atlas.format);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            int texId = (int)nativeTexPtr;
+            for (int i = 0; i < count; i++)
+            {
+                ref var r = ref regions[i];
+                JS_GpuUpload_TexSubImage3DRegion(texId, 0, r.sliceIndex,
+                    r.dstX, r.dstY, r.width, r.height, bpp, r.srcRowPitch, r.pixelData);
+            }
+#else
+            int headerSize = UnsafeUtility.SizeOf<NativeBatchHeader>();
+            int requestSize = UnsafeUtility.SizeOf<NativeUploadRequest>();
+            int totalBytes = headerSize + requestSize * count;
+
+            var batchBuffer = new NativeArray<byte>(totalBytes, Allocator.Persistent,
+                NativeArrayOptions.UninitializedMemory);
+            byte* batchPtr = (byte*)batchBuffer.GetUnsafePtr();
+
+            var header = (NativeBatchHeader*)batchPtr;
+            header->count = count;
+            header->padding = 0;
+
+            var requests = (NativeUploadRequest*)(batchPtr + headerSize);
+
+            for (int i = 0; i < count; i++)
+            {
+                ref var r = ref regions[i];
+                requests[i] = new NativeUploadRequest
+                {
+                    nativeTexPtr = nativeTexPtr,
+                    pixelData = r.pixelData,
+                    width = r.width,
+                    height = r.height,
+                    sliceIndex = r.sliceIndex,
+                    mipLevel = 0,
+                    bytesPerPixel = bpp,
+                    dstX = r.dstX,
+                    dstY = r.dstY,
+                    srcRowPitch = r.srcRowPitch
+                };
+            }
+
+            int frame = Time.frameCount;
+            if (frame != lastDisposeFrame)
+            {
+                lastDisposeFrame = frame;
+                for (int i = 0; i < pendingBuffers.Count; i++)
+                    pendingBuffers[i].Dispose();
+                pendingBuffers.Clear();
+            }
+
+            cmdBuffer.Clear();
+            cmdBuffer.IssuePluginEventAndData(batchEventFunc, 0, (IntPtr)batchPtr);
+            Graphics.ExecuteCommandBuffer(cmdBuffer);
+
+            pendingBuffers.Add(batchBuffer);
+#endif
+        }
 
         private static int BppForFormat(TextureFormat format)
         {

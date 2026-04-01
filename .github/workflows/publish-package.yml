@@ -79,7 +79,7 @@ jobs:
             console.log(JSON.stringify(pkg));
           ")
 
-          curl -sv -X POST "https://registry.lightside.media/-/admin/publish" \
+          curl -svf -X POST "https://registry.lightside.media/-/admin/publish" \
             -H "Authorization: Bearer ${{ secrets.REGISTRY_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{

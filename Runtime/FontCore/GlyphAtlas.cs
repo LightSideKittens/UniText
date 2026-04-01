@@ -1009,6 +1009,7 @@ namespace LightSide
             AnyAtlasTextureChanged?.Invoke(newTex);
         }
 
+        
         private TileSlot GrowAtlas(int tileSize)
         {
             int newSliceIndex = sliceCount;
@@ -1289,7 +1290,6 @@ namespace LightSide
                 compList[i] = rec;
             }
 
-            bool gpuCopy = SystemInfo.copyTextureSupport != CopyTextureSupport.None;
             for (int i = 0; i < compList.Count; i++)
             {
                 var rec = compList[i];
@@ -1299,27 +1299,17 @@ namespace LightSide
                 DecodeTileXY(rec.oldEncodedTile, tileSize, out int srcX, out int srcY);
                 DecodeTileXY(rec.newEncodedTile, tileSize, out int dstX, out int dstY);
 
-                if (gpuCopy)
-                {
-                    Graphics.CopyTexture(oldTex, rec.oldPage, 0, srcX, srcY, tileSize, tileSize,
-                                         atlasArray, rec.newPage, 0, dstX, dstY);
-                }
-                else
-                {
-                    CopyTilePixelsCPU(oldTex, rec.oldPage, srcX, srcY,
-                                      atlasArray, rec.newPage, dstX, dstY, tileSize);
-                }
+                CopyTilePixelsCPU(oldTex, rec.oldPage, srcX, srcY,
+                                  atlasArray, rec.newPage, dstX, dstY, tileSize);
             }
 
-            if (!gpuCopy)
-                atlasArray.Apply(false, false);
-
-            if (hasMipmaps && sliceCount > 0)
+            if (sliceCount > 0)
             {
                 ulong allPagesMask = sliceCount >= 64 ? ~0UL : (1UL << sliceCount) - 1;
-                MipmapGenerator.GenerateForSlices(atlasArray, allPagesMask);
+                if (hasMipmaps)
+                    MipmapGenerator.GenerateForSlices(atlasArray, allPagesMask);
 
-                int mipCount = atlasArray.mipmapCount;
+                int mipCount = hasMipmaps ? atlasArray.mipmapCount : 1;
                 if (GpuUpload.IsSupported)
                     GpuUpload.UploadDirtySlices(atlasArray, allPagesMask, mipCount, cachedNativeTexPtr);
                 else

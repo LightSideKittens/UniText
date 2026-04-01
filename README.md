@@ -1,44 +1,8 @@
-# [UniText](https://discord.gg/ZetkAv3S)
-
-> 🚀 **UniText 2.0 — Coming Soon.** The biggest update since the initial release — rewritten from scratch.
-
-<details>
-<summary><b>See what's new in 2.0</b></summary>
-<br>
-
-🎨 **No more materials.** UniTextAppearance is gone. Effects are configured directly on components and can target individual parts of the text.
-
-🔤 **Variable Fonts.** Full axis support — weight, width, italic, slant, optical size — controllable per-character. Three-tier resolution: variable axes → static faces → synthesis. Same algorithm as CSS. No other game engine has this (except Godot).
-
-⚡ **SDF & MSDF rendering from raw curves.** Runtime Bézier rasterization via Burst. No pre-baked atlases. A single global `Texture2DArray`: 1 draw call instead of N, automatic LRU eviction, adaptive tile sizes by glyph complexity, defragmentation.
-
-👨‍👩‍👧‍👦 **Font Families.** Primary + faces (bold, italic, light). CSS §5.2 weight matching — same algorithm browsers use. Redesigned `UniTextFontStack`.
-
-🌍 **UniTextWorld.** 3D text without Canvas. Full pipeline (Unicode, BiDi, shaping, effects, emoji, fallback) via MeshRenderer.
-
-✨ **Effects.** Outline and shadow with per-character control. Multi-pass rendering. Works in Canvas and World.
-
-🔠 **SmallCaps.** Native OpenType `smcp` via HarfBuzz. Proper glyphs when available, automatic synthesis when not.
-
-🇹🇭 **Thai & Lao word segmentation.** Dictionary-based word breaking (26K Thai words). Correct line breaks for SE Asian scripts.
-
-📦 **Zstd font compression.** ~2.7x smaller builds for Latin/Arabic, ~1.3x for CJK. ~600 MB/s desktop, ~175 MB/s mobile.
-
-📝 **Markdown.** `**bold**`, `*italic*`, `~~strikethrough~~`, `++underline++` — out of the box.
-
-🛠️ **Editor UX.** Style selector with ~30 presets and search. Font family inspector. Glyph picker with live preview. Atlas preview tabs. Styles & Style Presets.
-
-🐛 **...and a mountain of fixes.** Full changelog and migration notes included with the release.
-
-> ⚠️ Major version bump — expect breaking changes from 1.x.
-
-</details>
-
----
+# [UniText](https://discord.gg/ynRHp3wRmb)
 
 Industrial-grade Unicode 17.0 text engine for Unity. Built on **HarfBuzz** — the same shaping engine used by Chrome, Firefox, Adobe InDesign, and Android.
 
-Passes all **891,757** official Unicode conformance tests. Zero GC allocations at runtime. **3-21x faster** than TextMeshPro.
+Passes all **891,757** official Unicode conformance tests.
 
 <img width="871" height="978" alt="image" src="https://github.com/user-attachments/assets/4f89b2a7-4f7e-4eb0-aa4e-246879672e7a" />
 
@@ -56,7 +20,9 @@ Passes all **891,757** official Unicode conformance tests. Zero GC allocations a
 - 🏷️ **Extensible markup** — 30+ modifier presets, Markdown support (`**bold**`, `*italic*`), custom parse rules, shared configurations
 - 👆 **Interactive text** — clickable/hoverable regions with typed events and highlight system
 - 🇹🇭 **Word segmentation** — dictionary-based word breaking for Thai, Lao, Khmer, Myanmar (SE Asian scripts without spaces)
-- 🚀 **Zero allocations** — custom pooling, parallel processing, 3-21x faster than TextMeshPro
+- 🌍 **UniTextWorld** — 3D text without Canvas. Full pipeline (Unicode, BiDi, shaping, effects, emoji, fallback) via MeshRenderer
+- 📦 **Zstd font compression** — ~2.7x smaller builds for Latin/Arabic, ~1.3x for CJK
+- 🛠️ **Editor UX** — style selector with ~30 presets, font family inspector, glyph picker with live preview, atlas preview tabs
 
 ## 📦 Installation
 
@@ -84,23 +50,6 @@ uniText.Text = "مرحبا بالعالم";          // Arabic
 uniText.Text = "Mixed: Hello עולם World"; // BiDi
 uniText.Text = "👨‍👩‍👧‍👦🇯🇵";                    // Emoji
 ```
-
-## ⚡ Performance
-
-<img width="629" height="558" alt="image_2026-02-13_18-25-28" src="https://github.com/user-attachments/assets/328bf127-bde1-449b-8e26-b713a8920102" />
-
-Android production build, 100 objects x 2300 chars:
-
-| Benchmark        | vs TextMeshPro | vs UI Toolkit |
-|------------------|----------------|---------------|
-| Object creation  | 3.4x faster    | 4.9x faster   |
-| Full rebuild     | 2.9x faster    | 5.4x faster   |
-| Layout           | 20.7x faster   | 3.4x faster   |
-| Mesh rebuild     | 7.1x faster    | 2.4x faster   |
-
-- 🧹 **Zero GC allocations** at runtime — custom pooling with 95%+ hit rate
-- 🧵 Multi-threaded **parallel** text processing
-- ⚙️ FreeType glyph rendering: **4.7-15.2x** faster than Unity FontEngine
 
 ## 🖥️ Supported Platforms
 
