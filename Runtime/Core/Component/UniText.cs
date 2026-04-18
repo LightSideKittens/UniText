@@ -299,7 +299,18 @@ namespace LightSide
         /// <param name="length">Number of characters to use.</param>
         public void SetText(char[] source, int start, int length)
         {
-            sourceText = new ReadOnlyMemory<char>(source, start, length);
+            var memory = new ReadOnlyMemory<char>(source, start, length);
+            SetText(memory);
+        }
+        
+        /// <summary>
+        /// Sets text content from a memory without allocating a string.
+        /// Ideal for frequently updated text (timers, scores, etc.).
+        /// </summary>
+        /// <param name="source">Source memory.</param>
+        public void SetText(ReadOnlyMemory<char> source)
+        {
+            sourceText = source;
             isTextFromBuffer = true;
             if (length == 0)
             {
