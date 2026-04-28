@@ -312,7 +312,7 @@ namespace LightSide
         {
             sourceText = source;
             isTextFromBuffer = true;
-            if (length == 0)
+            if (source.Length == 0)
             {
                 DeInit();
             }
