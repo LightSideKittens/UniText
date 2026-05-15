@@ -1,6 +1,6 @@
 <div align="center">
 
-# UniText
+# UniText Platinum
 
 **Industrial-grade Unicode 17.0 text engine for Unity**
 
