@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1d671b8df1409294a2e77970855f56, type: 3}
+  m_Name: UniTextAppearance_Default
+  m_EditorClassIdentifier: LightSide.UniText::UniTextAppearance
+  defaultMaterials:
+    items:
+    - {fileID: 2100000, guid: 576afc17f1fccc544aef5b2388b8def2, type: 2}
+  fontMaterials:
+    items:
+    - font: {fileID: 11400000, guid: 9f194bcdf6b582b4c8731cdfe455216c, type: 2}
+      materials:
+        items:
+        - {fileID: 2100000, guid: 2fe109d0df6f03246836c86eb7f6ca36, type: 2}
+        - {fileID: 2100000, guid: c787515284273dd4fb79cd7c0d20619b, type: 2}

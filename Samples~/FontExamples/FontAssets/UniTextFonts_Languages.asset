@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ecf69df938478886267ac0693c4369, type: 3}
+  m_Name: UniTextFonts_Languages
+  m_EditorClassIdentifier: LightSide.UniText::UniTextFonts
+  fonts:
+    items:
+    - {fileID: 11400000, guid: 2832519679f1b554ab5ad6f42ca74150, type: 2}
+    - {fileID: 11400000, guid: 2c2de42621556a44f91f142e061376f7, type: 2}
+    - {fileID: 11400000, guid: a166570a899002c468a4a5867b314360, type: 2}
+    - {fileID: 11400000, guid: b332e7b3b4b76cf4592fb9a7dd416596, type: 2}
+    - {fileID: 11400000, guid: b5d11e73b0a220742aa82363964c196e, type: 2}
+    - {fileID: 11400000, guid: ff46ef126270a1d42b38a3ed1bcd0494, type: 2}
+    - {fileID: 11400000, guid: b6f544478aa4d6849aa41ba90cff3696, type: 2}
+    - {fileID: 11400000, guid: 21d5cdf93f1fc0b4a8a232af71b0733d, type: 2}

@@ -1,0 +1,20 @@
+# Generated XML documentation
+UniText.xml
+
+# User-specific settings (created from Defaults/ template)
+Resources/UniTextSettings.asset
+Resources/UniTextSettings.asset.meta
+
+
+# IDE
+.idea/
+*.user
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
