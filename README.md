@@ -6,7 +6,6 @@
 
 Built on [HarfBuzz](https://harfbuzz.github.io/) — the same shaping engine behind Chrome, Firefox, Adobe InDesign, and Android.
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/LightSideMeowshop/unitext)
 [![Unity](https://img.shields.io/badge/Unity-2021.3+-black?logo=unity)](https://unity.com/)
 [![License](https://img.shields.io/badge/license-PolyForm_Noncommercial-green)](LICENSE.md)
 [![Discord](https://img.shields.io/discord/1474286776884396055?color=5865F2&logo=discord&logoColor=white&label=Discord)](https://discord.gg/ynRHp3wRmb)
