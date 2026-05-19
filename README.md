@@ -3,7 +3,7 @@
 # UniText Free (Raw Text Engine Core)
 
 ## **Looking for production use?** [**UniText Platinum**](https://unity.lightside.media/unitext/pricing) adds Enhanced Style Core, SDF/MSDF rendering, Font Families, Variable Fonts, Effects, 3D text, Font Compression, Long-term Support and much more.
-Available on [Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844) and [direct from Light Side](https://unity.lightside.media/unitext/pricing).
+Available on the [our website (recommended)](https://unity.lightside.media/unitext/pricing) and [Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844).
 
 **Open-source Unicode text engine for Unity**
 
