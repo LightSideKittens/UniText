@@ -2,8 +2,15 @@
 
 # UniText Free (Raw Text Engine Core)
 
-## **Looking for production use?** [**UniText Platinum**](https://unity.lightside.media/unitext/pricing) adds Enhanced Style Core, SDF/MSDF rendering, Font Families, Variable Fonts, Effects, 3D text, Font Compression, Long-term Support and much more.
-Available on the [our website (recommended)](https://unity.lightside.media/unitext/pricing) and [Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844).
+**Looking for production use?** [**UniText Platinum**](https://unity.lightside.media/unitext/pricing) adds Enhanced Style Core, SDF/MSDF rendering, Font Families, Variable Fonts, Effects, 3D text, Font Compression, Long-term Support and much more.
+
+<a href="https://unity.lightside.media/unitext/pricing">
+  <img src=".github/assets/get-platinum-button.svg" alt="Get UniText Platinum" width="340">
+</a>
+
+<sub>Also available on the [Unity Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844).</sub>
+
+---
 
 **Open-source Unicode text engine for Unity**
 
@@ -19,6 +26,7 @@ Built on [HarfBuzz](https://harfbuzz.github.io/) — the same shaping engine beh
 <img width="871" alt="UniText showcase" src="https://github.com/user-attachments/assets/4f89b2a7-4f7e-4eb0-aa4e-246879672e7a" />
 
 </div>
+
 ---
 
 ## Key Features
