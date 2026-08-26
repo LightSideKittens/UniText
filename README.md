@@ -2,10 +2,10 @@
 
 # UniText Free (Raw Text Engine Core)
 
-**Looking for production use?** [**UniText Platinum**](https://unity.lightside.media/unitext/pricing) adds Enhanced Style Core, SDF/MSDF rendering, Font Families, Variable Fonts, Effects, 3D text, Font Compression, Long-term Support and much more.
+**Looking for production use?** [**UniText Folio**](https://unity.lightside.media/unitext/pricing) adds Enhanced Style Core, SDF/MSDF rendering, Font Families, Variable Fonts, Effects, 3D text, Font Compression, Font memory-mapping, Layer & Paint System, Huge Animation Pack, Timeline, a lot of Typewrite animations, Long-term Support and much more.
 
 <a href="https://unity.lightside.media/unitext/pricing">
-  <img src=".github/assets/platinum-cta.svg" alt="Get UniText Platinum" width="340">
+  <img src=".github/assets/platinum-cta.svg" alt="Get UniText Folio" width="340">
 </a>
 
 <sub>Also available on the [Unity Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844).</sub>
