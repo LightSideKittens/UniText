@@ -127,7 +127,11 @@ namespace LightSide
         {
             if (cachedInstanceId == 0)
             {
+#if UNITY_6000_2_OR_NEWER
+                cachedInstanceId = GetEntityId().GetHashCode();
+#else
                 cachedInstanceId = GetInstanceID();
+#endif
                 CachedName = name;
             }
 
