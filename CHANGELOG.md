@@ -9,5 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - TBD
 
+### Fixed
+- Restore Unity 6.6 compilation by implementing unlimited UI layout maximum sizes and using the current object identity API on Unity 6.2+, while retaining Unity 2021.3 compatibility.
+
 ### Added
 - Initial release
