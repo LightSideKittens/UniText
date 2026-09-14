@@ -2,11 +2,11 @@
 
 # UniText Free (Raw Text Engine Core)
 
-**[UniText Folio](https://unity.lightside.media/unitext)** — Every language. Every style. No fonts required. Top performance.
+**[UniText Folio](https://unity.lightside.media/unitext)** — Every language. Any style. No fonts required. Top performance.
 
-Rich editing, IME, documents, layered effects and animation for Unity UI and 3D. Pixel-perfect fonts, automatic grid detection and Font Memory Mapping. Modifier, input and decoration constructors, variable fonts, native emoji and virtualized scrolling.
+UniText supplies a common text model for labels, input fields, rich editors and virtualized documents in Canvas UI and world space. Capabilities include native emoji, variable and pixel fonts, Font Memory Mapping, rich editing, layered styles and text animation. Modifier, parser, input and decoration extensions compose through the same pipeline. Shared LightSide systems provide reusable infrastructure for authoring and runtime work.
 
-UniText and UniShapes share paints, gradients, textures, filters and editor tools. Text, shapes and Lottie animation use common shaders, materials and batching. Core supplies state, clocks, input, geometry, atlases and runtime infrastructure; MoveIt animates component and nested layer properties.
+UniText belongs to the wider LightSide ecosystem. Common implementations include paints, gradients, textures, filters, state, clocks, input, geometry, GPU infrastructure and editor tools. Text, shapes and Lottie use shared shaders, materials and batching. MoveIt animates exposed component and nested layer properties.
 
 <a href="https://unity.lightside.media/unitext/pricing">
   <img src=".github/assets/folio-cta.svg" alt="UniText Folio" width="340">
