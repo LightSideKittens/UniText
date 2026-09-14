@@ -83,6 +83,10 @@ namespace LightSide
             UniTextDebug.EndSample();
         }
 
+        // Use the unlimited size directly to remain compatible with older uGUI versions.
+        public float maxWidth => float.PositiveInfinity;
+        public float maxHeight => float.PositiveInfinity;
+
         public float minWidth => 0;
         public float preferredWidth => cachedPreferredWidth;
         public float flexibleWidth => -1;
