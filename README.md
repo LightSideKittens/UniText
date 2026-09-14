@@ -2,9 +2,9 @@
 
 # UniText
 
-**Every language. Every style. No fonts required. Top performance.**
+**Every language. Any style. No fonts required. Top performance.**
 
-Text for Unity UI and 3D. Rich editing, documents, native emoji, variable and pixel fonts, Font Memory Mapping, layered effects and animation. Styles, input rules and field decoration use reusable constructors backed by the LightSide ecosystem.
+UniText supplies a common text model for labels, input fields, rich editors and virtualized documents in Canvas UI and world space. Capabilities include native emoji, variable and pixel fonts, Font Memory Mapping, rich editing, layered styles and text animation. Modifier, parser, input and decoration extensions compose through the same pipeline. Shared LightSide systems provide reusable infrastructure for authoring and runtime work.
 
 [![Unity](https://img.shields.io/badge/Unity-2021.3+-black?logo=unity)](https://unity.com/)
 [![License](https://img.shields.io/badge/license-PolyForm_Noncommercial-green)](LICENSE.md)
