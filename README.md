@@ -2,10 +2,14 @@
 
 # UniText Free (Raw Text Engine Core)
 
-**Looking for production use?** [**UniText Folio**](https://unity.lightside.media/unitext/pricing) adds Enhanced Style Core, SDF/MSDF rendering, Font Families, Variable Fonts, Effects, 3D text, Font Compression, Font memory-mapping, Layer & Paint System, Huge Animation Pack, Timeline, a lot of Typewrite animations, Long-term Support and much more.
+**[UniText Folio](https://unity.lightside.media/unitext)** — Every language. Every style. No fonts required. Top performance.
+
+Rich editing, IME, documents, layered effects and animation for Unity UI and 3D. Pixel-perfect fonts, automatic grid detection and Font Memory Mapping. Modifier, input and decoration constructors, variable fonts, native emoji and virtualized scrolling.
+
+UniText and UniShapes share paints, gradients, textures, filters and editor tools. Text, shapes and Lottie animation use common shaders, materials and batching. Core supplies state, clocks, input, geometry, atlases and runtime infrastructure; MoveIt animates component and nested layer properties.
 
 <a href="https://unity.lightside.media/unitext/pricing">
-  <img src=".github/assets/folio-cta.svg" alt="Get UniText Folio" width="340">
+  <img src=".github/assets/folio-cta.svg" alt="UniText Folio" width="340">
 </a>
 
 <sub>Also available on the [Unity Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844).</sub>
@@ -33,7 +37,7 @@ Built on [HarfBuzz](https://harfbuzz.github.io/) — the same shaping engine beh
 
 | | Feature | Description |
 |---|---|---|
-| 🌐 | **150+ Languages** | Arabic, Hebrew, Hindi, Thai, CJK, and every other Unicode script. One component, automatic font fallback |
+| 🌐 | **Every language** | Arabic, Hebrew, Hindi, Thai, CJK, and every other Unicode script. One component, automatic font fallback |
 | 🔄 | **Full BiDi** | Mixed LTR/RTL with numbers and punctuation renders correctly (UAX #9) |
 | 😀 | **Native Color Emoji** | ZWJ sequences, skin tones, flags via system fonts. Zero extra build size |
 | 🏷️ | **Extensible Markup** | 15+ built-in modifiers, custom parse rules, shared configurations |
@@ -94,7 +98,7 @@ uniText.Text = "👨‍👩‍👧‍👦🇯🇵";                    // Emoji
 UniText 1.0 is free and open-source under the [License](LICENSE.md).
 
 > [!TIP]
-> **Contact: unity@lightside.media** — questions, feedback, commercial inquiries.
+> **[Discord](https://discord.gg/ynRHp3wRmb) is the primary channel for questions, bug reports, help and discussion across LightSide.** Email: [unity@lightside.media](mailto:unity@lightside.media).
 
 <details>
 <summary><b>Third-Party Software</b></summary>
