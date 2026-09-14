@@ -1,10 +1,10 @@
 <div align="center">
 
-# UniText Platinum
+# UniText
 
-**Industrial-grade Unicode 17.0 text engine for Unity**
+**Every language. Every style. No fonts required. Top performance.**
 
-Built on [HarfBuzz](https://harfbuzz.github.io/) — the same shaping engine behind Chrome, Firefox, Adobe InDesign, and Android.
+Text for Unity UI and 3D. Rich editing, documents, native emoji, variable and pixel fonts, Font Memory Mapping, layered effects and animation. Styles, input rules and field decoration use reusable constructors backed by the LightSide ecosystem.
 
 [![Unity](https://img.shields.io/badge/Unity-2021.3+-black?logo=unity)](https://unity.com/)
 [![License](https://img.shields.io/badge/license-PolyForm_Noncommercial-green)](LICENSE.md)
@@ -22,28 +22,32 @@ Built on [HarfBuzz](https://harfbuzz.github.io/) — the same shaping engine beh
 
 | | Feature | Description |
 |---|---|---|
-| 🌐 | **150+ Languages** | Arabic, Hebrew, Hindi, Thai, CJK, and every other Unicode script. One component, automatic font fallback |
+| 🌐 | **Every language** | Arabic, Hebrew, Hindi, Thai, CJK, and every other Unicode script. One component, automatic font fallback |
+| 💾 | **Font Memory Mapping** | Font files read on demand without a full managed copy. Unused font assets remain compressed |
+| 🟪 | **Pixel-perfect fonts** | Automatic grid detection, sharp pixels and grid-aligned effects and animation. Vector pixel fonts and bitmap-only fonts |
+| ✍️ | **Rich editing** | Selection, undo/redo, IME, rich clipboard, touch editing, native keyboards, masks, validation and reusable input behaviors |
+| 📖 | **Documents** | Lists, ruby, formulas, inline images and prefabs, with virtualized scrolling |
 | 🔄 | **Full BiDi** | Mixed LTR/RTL with numbers and punctuation renders correctly (UAX #9) |
 | 😀 | **Native Color Emoji** | ZWJ sequences, skin tones, flags via system fonts. Zero extra build size |
-| ⚡ | **SDF & MSDF Rendering** | Curve-based Burst-compiled rasterization. Shared `Texture2DArray` atlas with adaptive tile sizes, reference counting, and LRU eviction |
-| 🔤 | **Font Families** | CSS §5.2 weight matching, variable font axes (wght, wdth, ital, slnt, opsz), three-tier resolution: variable axes → static faces → synthesis |
-| 🎨 | **Effects** | Outline and shadow via multi-pass SDF. `<outline>`, `<shadow>` tags with color, dilate, offset, softness |
-| 🏷️ | **Extensible Markup** | 30+ modifier presets, Markdown (`**bold**`, `*italic*`), custom parse rules, shared configurations |
+| ⚡ | **SDF & MSDF Rendering** | Sharp text and effects across sizes, with shared glyph storage |
+| 🔤 | **Font Families** | Font families, real bold and italic faces, and variable weight, width and slant |
+| 🎨 | **Style constructors** | Fills, outlines, shadows, glow, gradients, textures, nested effects and reusable presets. Character, word, line and range styling |
+| 🏷️ | **Extensible markup** | Reusable modifier presets, Markdown, custom parsing rules and shared style configurations |
 | 👆 | **Interactive Text** | Clickable/hoverable regions with typed events and highlight system |
 | 🇹🇭 | **Word Segmentation** | Dictionary-based word breaking for Thai, Lao, Khmer, Myanmar |
-| 🌍 | **UniTextWorld** | 3D text without Canvas — full pipeline via MeshRenderer |
-| 📦 | **Zstd Compression** | ~2.7x smaller builds for Latin/Arabic, ~1.3x for CJK |
-| 🛠️ | **Editor UX** | Style selector with ~30 presets, font family inspector, glyph picker, atlas preview |
+| 🌍 | **UniTextWorld** | 3D text, styles and interaction without Canvas, with shared world batching |
+| 📦 | **Font compression** | Compressed font data, on-demand loading and runtime glyph atlases |
+| 🛠️ | **Editor tools** | Style and asset selectors, layer lists, paint and curve editors, font and glyph tools, previews, Undo and prefab support |
 
 <div align="center">
 <img width="2157" alt="Languages showcase" src="https://github.com/user-attachments/assets/81b9bcba-fa6d-4e50-8e7d-2781a7d0c38d" />
 </div>
 
-## Get UniText
+## Installation
 
 <div align="center">
 
-| | Channel | What you get |
+| | Channel | Installation |
 |---|---|---|
 | [![Asset Store](https://img.shields.io/badge/Asset_Store-black?logo=unity&logoColor=white)](https://assetstore.unity.com/packages/tools/gui/unitext-357844) | [**Unity Asset Store**](https://assetstore.unity.com/packages/tools/gui/unitext-357844) | Import into `Assets/` folder |
 | [![Light Side](https://img.shields.io/badge/Light_Side-direct-blue)](https://unity.lightside.media/unitext/pricing) | [**Direct from Light Side**](https://unity.lightside.media/unitext/pricing) | Install as a **Package** — updates via Package Manager. One-time, **not per seat** |
@@ -79,6 +83,15 @@ Render pipelines: **Built-in**, **URP**, **HDRP**
 <img width="1666" alt="Platforms showcase" src="https://github.com/user-attachments/assets/46940f69-103b-406c-8667-e5500e00c579" />
 </div>
 
+
+## LightSide ecosystem
+
+UniText and UniShapes share paints, gradients, textures, filters, property editing and the same approach to modifier and layer construction. MoveIt animates exposed component and nested properties. Text, shapes and Lottie animation use common shaders, materials, batching and GPU infrastructure.
+
+Core also supplies state, clocks, interaction routing, geometry tools, workers, pools, serialization and editor controls. Compatible content can share one draw call; materials, textures, masks, sorting and render passes determine the batch boundaries.
+
+[Font storage and pixel-font settings](https://unity.lightside.media/unitext/docs/) are documented alongside platform requirements.
+
 ## Documentation
 
 - [Getting Started](Documentation/GettingStarted.md)
@@ -92,7 +105,7 @@ UniText is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE.md)
 Commercial use requires a license via [Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844) or [direct purchase](https://unity.lightside.media/unitext/pricing).
 
 > [!TIP]
-> **Contact: unity@lightside.media** — we respond quickly and licensing is straightforward.
+> **[Discord](https://discord.gg/ynRHp3wRmb) is the primary channel for questions, bug reports, help and discussion across LightSide.** Email: [unity@lightside.media](mailto:unity@lightside.media).
 
 <details>
 <summary><b>Third-Party Software</b></summary>

@@ -2,7 +2,7 @@
     "name": "media.lightside.unitext",
     "version": "2.0.0",
     "displayName": "UniText",
-    "description": "Professional Unicode text rendering for Unity with full RTL support, HarfBuzz shaping, and extensible markup system.",
+    "description": "Unicode text for Unity UI and 3D. Mixed writing directions, native emoji, font families, styles and extensible markup.",
     "unity": "2021.3",
     "dependencies": {
         "com.unity.burst": "1.6.0",
