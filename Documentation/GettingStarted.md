@@ -34,7 +34,7 @@ UniText uses its own font format with two rendering modes:
 | **SDF** | Single-channel Signed Distance Field | Default. Resolution-independent, supports outlines and shadows |
 | **MSDF** | Multi-channel Signed Distance Field | Sharper corners on geometric/display fonts |
 
-Both modes use Burst-compiled curve-based rasterization (no bitmap rendering). Glyphs are stored in a shared `Texture2DArray` atlas with adaptive tile sizes (64/128/256), reference counting, and LRU eviction. Set the mode per component via `RenderMode`.
+Both modes use Burst-compiled curve-based rasterization (no bitmap rendering). Glyphs are stored in a shared `Texture2DArray` atlas with adaptive tile sizes (64/128), reference counting, and LRU eviction. Set the mode per component via `RenderMode`.
 
 ### 2.1 Creating a UniTextFont Asset
 
@@ -68,7 +68,7 @@ Select a UniTextFont asset to configure in the Inspector:
 |---------|---------|-------------|
 | **Font Scale** | 1.0 | Visual scale multiplier. Normalizes fonts that appear too small or too large by design |
 | **SDF Detail** | 1.0 | Tile detail multiplier. Higher values force larger atlas tiles for fonts with thin strokes (e.g. calligraphic) |
-| **Glyph Overrides** | — | Per-glyph tile size overrides (Auto/64/128/256) for fine-tuning quality on specific glyphs |
+| **Glyph Overrides** | — | Per-glyph tile size overrides (Auto/64/128) for fine-tuning quality on specific glyphs |
 
 After changing SDF Detail or Glyph Overrides, click **Apply** to rebuild the atlas. **Revert** discards pending changes.
 
@@ -752,10 +752,10 @@ For custom interaction logic:
 
 ```csharp
 // Local space
-TextHitResult hit = uniText.HitTest(localPosition);
+TextHitResult hit = uniText.HitTestRange(localPosition);
 
 // Screen space
-TextHitResult hit = uniText.HitTestScreen(screenPosition, eventCamera);
+TextHitResult hit = uniText.HitTestRange(screenPosition, eventCamera);
 
 // Get visual bounds for a cluster range
 var bounds = new List<Rect>();
