@@ -782,7 +782,8 @@ namespace LightSide
         {
             base.OnEnable();
             Cat.Meow($"[UniText] OnEnable, {name}", this);
-            sourceText = (text ?? "").AsMemory();
+            if (!isTextFromBuffer)
+                sourceText = (text ?? "").AsMemory();
             Sub();
             CollectExistingSubMeshRenderers();
             cachedCanvasRenderMode = canvas != null ? canvas.renderMode : RenderMode.ScreenSpaceOverlay;
