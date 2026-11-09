@@ -5,7 +5,7 @@
 This repository holds **UniText 1.0.0**, the first open-source release of UniText, free under MIT.<br>
 The engine has been rewritten since then. The current version, **UniText Folio**, adds SDF and MSDF rendering, variable fonts, effects, rich text editing and much more, so 1.0.0 does not show what UniText can do today.
 
-**Evaluating UniText for a project? [Request a free 14-day trial of UniText Folio](https://unity.lightside.media/unitext/pricing).**
+**Evaluating UniText for a project? [Request a free 30-day trial of UniText Folio](https://unity.lightside.media/unitext/pricing).**
 
 ---
 
