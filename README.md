@@ -1,10 +1,17 @@
 <div align="center">
 
-# UniText Free (Raw Text Engine Core)
+# UniText 1.0 — Early Open-Source Release
+
+This repository holds **UniText 1.0.0**, the first open-source release of UniText, free under MIT.<br>
+The engine has been rewritten since then. The current version, **UniText Folio**, adds SDF and MSDF rendering, variable fonts, effects, rich text editing and much more, so 1.0.0 does not show what UniText can do today.
+
+**Evaluating UniText for a project? [Request a free 14-day trial of UniText Folio](https://unity.lightside.media/unitext/pricing).**
+
+---
 
 **[UniText Folio](https://unity.lightside.media/unitext)** — Every language. Any style. No fonts required. Top performance.
 
-UniText supplies a common text model for labels, input fields, rich editors and virtualized documents in Canvas UI and world space. Capabilities include native emoji, variable and pixel fonts, Font Memory Mapping, rich editing, layered styles and text animation. Modifier, parser, input and decoration extensions compose through the same pipeline. Shared LightSide systems provide reusable infrastructure for authoring and runtime work.
+UniText Folio supplies a common text model for labels, input fields, rich editors and virtualized documents in Canvas UI and world space. Capabilities include native emoji, variable and pixel fonts, Font Memory Mapping, rich editing, layered styles and text animation. Modifier, parser, input and decoration extensions compose through the same pipeline. Shared LightSide systems provide reusable infrastructure for authoring and runtime work.
 
 UniText belongs to the wider LightSide ecosystem. Common implementations include paints, gradients, textures, filters, state, clocks, input, geometry, GPU infrastructure and editor tools. Text, shapes and Lottie use shared shaders, materials and batching. MoveIt animates exposed component and nested layer properties.
 
@@ -15,6 +22,8 @@ UniText belongs to the wider LightSide ecosystem. Common implementations include
 <sub>Also available on the [Unity Asset Store](https://assetstore.unity.com/packages/tools/gui/unitext-357844).</sub>
 
 ---
+
+## UniText 1.0.0
 
 **Open-source Unicode text engine for Unity**
 
